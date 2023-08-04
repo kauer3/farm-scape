@@ -5,6 +5,9 @@ TagManager:
   serializedVersion: 2
   tags:
   - Ground
+  - Skate
+  - Boost
+  - Bouncy
   layers:
   - Default
   - TransparentFX

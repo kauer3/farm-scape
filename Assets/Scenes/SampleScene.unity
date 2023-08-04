@@ -480,7 +480,7 @@ Rigidbody2D:
   m_LinearDrag: 0.2
   m_AngularDrag: 0.05
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 8c0e8933b6adc1949ba5bc6917452c73, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -567,7 +567,7 @@ CapsuleCollider2D:
   m_GameObject: {fileID: 1795070811}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 0a6ab93066f40274ea36cfd86a05fc42, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -606,6 +606,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1795070812}
+  defaultPhysics: {fileID: 6200000, guid: 8c0e8933b6adc1949ba5bc6917452c73, type: 2}
+  skatePhysics: {fileID: 6200000, guid: ce09f3411ccdbee469e154bec6b45bdf, type: 2}
+  bouncyPhysics: {fileID: 6200000, guid: 0a6ab93066f40274ea36cfd86a05fc42, type: 2}
   speed: 20
 --- !u!1 &1870510135
 GameObject:
@@ -651,5 +654,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ef25c20bfcf934cbdb5774c47cc1d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  square: {fileID: 3066805559127418082, guid: b3624c70e58f5c64bbd4f80ecbbe62e6, type: 3}
-  spawnTime: 1
+  spawnTime: 2
+  pickups:
+  - {fileID: 3066805559127418082, guid: b3624c70e58f5c64bbd4f80ecbbe62e6, type: 3}
+  - {fileID: 3066805559127418082, guid: 70e54cc99078a314fb3814dcf953cbc1, type: 3}
+  - {fileID: 3066805559127418082, guid: a251e15c37660d6468131cffdb5f61c0, type: 3}

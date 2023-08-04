@@ -4,28 +4,38 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public GameObject square;
+    // public GameObject boost;
+    // public GameObject skate;
     public float spawnTime = 1f;
     private float timer = 0f;
+    public GameObject[] pickups;
     // Start is called before the first frame update
+    void Awake()
+    {
+
+    }
+
     void Start()
     {
-        
+
     }
 
     // Spawn a square every second
     private void Update()
     {
-        timer += Time.deltaTime;
-        if (timer >= spawnTime)
+        if (timer < spawnTime)
         {
-            Spawn();
+            timer += Time.deltaTime;
+        }
+        else
+        {
+            Spawn(pickups[Random.Range(0, pickups.Length)]);
             timer = 0f;
         }
     }
 
-    void Spawn()
+    void Spawn(GameObject collectable)
     {
-        Instantiate(square, new Vector2(transform.position.x + 10, transform.position.y), Quaternion.identity);
+        Instantiate(collectable, new Vector2(transform.position.x + 10, transform.position.y + Random.Range(-5, 5)), Quaternion.identity);
     }
 }

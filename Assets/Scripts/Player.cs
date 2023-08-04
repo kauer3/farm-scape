@@ -1,11 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    private string activePickup = null;
     public Rigidbody2D player;
+    public PhysicsMaterial2D defaultPhysics;
+    public PhysicsMaterial2D skatePhysics;
+    public PhysicsMaterial2D bouncyPhysics;
     public float speed = 10f;
     // public float rotationSpeed = 1000f;
     private bool launched = false;
@@ -23,9 +28,10 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        //Debug.Log("Vertical velocity: " + player.velocity.y + ", Horizontal velocity: " + player.velocity.x + ", Magnitude: " + player.velocity.magnitude);
+        // Debug.Log("Vertical velocity: " + player.velocity.y + ", Horizontal velocity: " + player.velocity.x + ", Magnitude: " + player.velocity.magnitude);
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            Debug.Log("Space Key Pressed Down!!!");
             if (!launched)
             {
                 player.bodyType = RigidbodyType2D.Dynamic;
@@ -46,12 +52,12 @@ public class Player : MonoBehaviour
             }
         }
 
-        if (player.velocity != Vector2.zero)
+        if (player.velocity.magnitude > 0 && player.position.y > -3.91)
         {
             // rotate the player to face the direction it is moving
             float angle = Mathf.Atan2(player.velocity.y, player.velocity.x) * Mathf.Rad2Deg;
             player.MoveRotation(angle);
-
+            //Debug.Log("Player velocity magnitude: " + player.velocity.magnitude + ", angle: " + angle);
         }
     }
 
@@ -65,18 +71,48 @@ public class Player : MonoBehaviour
     // get the horizontal velocity when colliding with the ground
     void OnCollisionEnter2D(Collision2D collision)
     {
-        // if (collision.gameObject.CompareTag("Ground"))
-        // {
-            // if (player.rotation > -50 && player.rotation < 90)
-            // {
-                // player.velocity = new Vector2(player.velocity.x, 0);
-            // }
-            // else
-            // {
-                // // player.velocity = Vector2.zero;
-                // player.MoveRotation(0f);
-                // player.bodyType = RigidbodyType2D.Static;
-            // }
-        // }
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            if (activePickup == "bouncy")
+            {
+                activePickup = null;
+                player.sharedMaterial = defaultPhysics;
+            }
+            else
+            {
+                if (player.rotation > -55 && player.rotation < 90 && player.velocity.magnitude >= 2)
+                {
+                    if (activePickup == "skate")
+                    {
+                        player.velocity = new Vector2(player.velocity.magnitude, 0);
+                        activePickup = null;
+                    }
+                }
+                else
+                {
+                    // player.velocity = Vector2.zero;
+                    player.MoveRotation(0f);
+                    player.bodyType = RigidbodyType2D.Static;
+                }
+            }
+        }
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Boost"))
+        {
+            player.AddRelativeForce(Vector2.right * 35f, ForceMode2D.Impulse);
+        }
+        else if (collision.gameObject.CompareTag("Skate"))
+        {
+            activePickup = "skate";
+            player.sharedMaterial = skatePhysics;
+        }
+        else if (collision.gameObject.CompareTag("Bouncy"))
+        {
+            activePickup = "bouncy";
+            player.sharedMaterial = bouncyPhysics;
+        }
     }
 }
