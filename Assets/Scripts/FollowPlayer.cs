@@ -14,6 +14,6 @@ public class FollowPlayer : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        transform.position = new Vector3(Mathf.Max(player.position.x, 0), Mathf.Max(player.position.y, 0), -10);
+        transform.position = new Vector3(Mathf.Max(player.position.x + 4f, 0), Mathf.Max(player.position.y, 0), -10);
     }
 }

@@ -8,14 +8,15 @@ TagManager:
   - Skate
   - Boost
   - Bouncy
+  - Skateboard
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - 
+  - Skateboard
   - Water
   - UI
-  - 
+  - Wheel
   - 
   - 
   - 

@@ -307,7 +307,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 913610808}
   m_LocalRotation: {x: 0, y: 0, z: 0.043619405, w: 0.9990483}
-  m_LocalPosition: {x: -5, y: -3, z: 10}
+  m_LocalPosition: {x: -5, y: -3, z: -1}
   m_LocalScale: {x: 0.7, y: 0.7, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -341,7 +341,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 1069335433}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 1100114dce9cb004ea616f26839e9255, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -606,9 +606,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 1795070812}
+  playerSprite: {fileID: 1795070813}
+  skateboard: {fileID: 7301231475686685852, guid: fc43d1c5948272644a0017eab585cdf8, type: 3}
   defaultPhysics: {fileID: 6200000, guid: 8c0e8933b6adc1949ba5bc6917452c73, type: 2}
-  skatePhysics: {fileID: 6200000, guid: ce09f3411ccdbee469e154bec6b45bdf, type: 2}
   bouncyPhysics: {fileID: 6200000, guid: 0a6ab93066f40274ea36cfd86a05fc42, type: 2}
+  onSkatePhysics: {fileID: 6200000, guid: 1100114dce9cb004ea616f26839e9255, type: 2}
   speed: 20
 --- !u!1 &1870510135
 GameObject:
@@ -659,3 +661,4 @@ MonoBehaviour:
   - {fileID: 3066805559127418082, guid: b3624c70e58f5c64bbd4f80ecbbe62e6, type: 3}
   - {fileID: 3066805559127418082, guid: 70e54cc99078a314fb3814dcf953cbc1, type: 3}
   - {fileID: 3066805559127418082, guid: a251e15c37660d6468131cffdb5f61c0, type: 3}
+  newPickup: {fileID: 0}

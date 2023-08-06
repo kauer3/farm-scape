@@ -4,16 +4,9 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    // public GameObject boost;
-    // public GameObject skate;
     public float spawnTime = 1f;
     private float timer = 0f;
     public GameObject[] pickups;
-    // Start is called before the first frame update
-    void Awake()
-    {
-
-    }
 
     void Start()
     {
@@ -36,6 +29,6 @@ public class Spawner : MonoBehaviour
 
     void Spawn(GameObject collectable)
     {
-        Instantiate(collectable, new Vector2(transform.position.x + 10, transform.position.y + Random.Range(-5, 5)), Quaternion.identity);
+        Instantiate(collectable, new Vector2(transform.position.x + 10, Mathf.Max(transform.position.y + Random.Range(-5, 5), -3.90f)), Quaternion.identity);
     }
 }

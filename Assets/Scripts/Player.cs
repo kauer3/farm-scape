@@ -6,11 +6,16 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    private string activePickup = null;
+    // private bool onSkateboard = false;
+    private bool skatePickup = false;
+    private bool bouncyPickup = false;
     public Rigidbody2D player;
+    public SpriteRenderer playerSprite;
+    public GameObject skateboard;
     public PhysicsMaterial2D defaultPhysics;
-    public PhysicsMaterial2D skatePhysics;
     public PhysicsMaterial2D bouncyPhysics;
+    public PhysicsMaterial2D onSkatePhysics;
+    private Rigidbody2D activeSkateboard = null;
     public float speed = 10f;
     // public float rotationSpeed = 1000f;
     private bool launched = false;
@@ -23,15 +28,9 @@ public class Player : MonoBehaviour
     // Make player face direction of movement
     void Update()
     {
-
-    }
-
-    void FixedUpdate()
-    {
         // Debug.Log("Vertical velocity: " + player.velocity.y + ", Horizontal velocity: " + player.velocity.x + ", Magnitude: " + player.velocity.magnitude);
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            Debug.Log("Space Key Pressed Down!!!");
             if (!launched)
             {
                 player.bodyType = RigidbodyType2D.Dynamic;
@@ -51,68 +50,153 @@ public class Player : MonoBehaviour
                 Launch(Vector2.up * clippedFlapStrength);
             }
         }
+    }
 
-        if (player.velocity.magnitude > 0 && player.position.y > -3.91)
+    void FixedUpdate()
+    {
+        if (activeSkateboard == null && player.velocity.magnitude > 0 && player.position.y > -3.91)
         {
-            // rotate the player to face the direction it is moving
+            float increment = 150 * Time.fixedDeltaTime;
             float angle = Mathf.Atan2(player.velocity.y, player.velocity.x) * Mathf.Rad2Deg;
-            player.MoveRotation(angle);
-            //Debug.Log("Player velocity magnitude: " + player.velocity.magnitude + ", angle: " + angle);
+            RotateForward(angle, increment);
         }
     }
 
-    // launch player in direction of (0, -0.64)
+    private void RotateForward(float angle, float incrementSpeed)
+    {
+        player.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, angle), incrementSpeed));
+    }
+
     public void Launch(Vector2 direction)
     {
         player.AddRelativeForce(direction, ForceMode2D.Impulse);
-        //Debug.Log("force up: " + direction);
     }
 
-    // get the horizontal velocity when colliding with the ground
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            if (activePickup == "bouncy")
+            if (bouncyPickup)
             {
-                activePickup = null;
+                bouncyPickup = false;
                 player.sharedMaterial = defaultPhysics;
+                playerSprite.color = new Color(1, 1, 1, 1);
+            }
+            else if (player.rotation > -55 && player.rotation < 90 && player.velocity.magnitude >= 2)
+            {
+                if (skatePickup)
+                {
+                    player.velocity = new Vector2(player.velocity.magnitude, 3f);
+                    InstantiateSkateboard();
+                    skatePickup = false;
+                    Debug.Log("Instantiated Skateboard!");
+                }
             }
             else
             {
-                if (player.rotation > -55 && player.rotation < 90 && player.velocity.magnitude >= 2)
-                {
-                    if (activePickup == "skate")
-                    {
-                        player.velocity = new Vector2(player.velocity.magnitude, 0);
-                        activePickup = null;
-                    }
-                }
-                else
-                {
-                    // player.velocity = Vector2.zero;
-                    player.MoveRotation(0f);
-                    player.bodyType = RigidbodyType2D.Static;
-                }
+                GameOver();
             }
+        }
+    }
+
+    void OnCollisionStay2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground"))
+        {
+            if (player.velocity.magnitude < 0.1)
+            {
+                GameOver();
+            }
+            // else if (player.sharedMaterial == skatePhysics)
+            // {
+                // player.freezeRotation = true;
+            // }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Boost"))
+        GameObject obj = collision.gameObject;
+        if (obj.CompareTag("Skateboard"))
         {
-            player.AddRelativeForce(Vector2.right * 35f, ForceMode2D.Impulse);
+            // onSkateboard = true;
+            player.sharedMaterial = onSkatePhysics;
+            activeSkateboard = collision.gameObject.GetComponent<Rigidbody2D>();
+            playerSprite.color = new Color(0.2235294f, 0.4156863f, 0.5490196f, 0.75f);
+            // player.MoveRotation(0f);
+            // float increment = 10 * Time.fixedDeltaTime;
+            // player.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, 0), increment));
+            //player.freezeRotation = true;
+            Debug.Log("Player hoped on skateboard!");
         }
-        else if (collision.gameObject.CompareTag("Skate"))
+        else
         {
-            activePickup = "skate";
-            player.sharedMaterial = skatePhysics;
+            if (obj.CompareTag("Boost"))
+            {
+                player.AddRelativeForce(Vector2.right * 35f, ForceMode2D.Impulse);
+                if (activeSkateboard)
+                {
+                    activeSkateboard.AddRelativeForce(Vector2.right * 35f, ForceMode2D.Impulse);
+                }
+            }
+            else if (obj.CompareTag("Skate"))
+            {
+                skatePickup = true;
+            }
+            else if (obj.CompareTag("Bouncy"))
+            {
+                bouncyPickup = true;
+                player.sharedMaterial = bouncyPhysics;
+                playerSprite.color = new Color(0.6705883f, 0.254902f, 0.7372549f, 0.75f);
+            }
+
+            Destroy(obj);
         }
-        else if (collision.gameObject.CompareTag("Bouncy"))
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Skateboard"))
         {
-            activePickup = "bouncy";
-            player.sharedMaterial = bouncyPhysics;
+            // onSkateboard = false;
+            activeSkateboard = null;
+            player.sharedMaterial = bouncyPickup ? bouncyPhysics : defaultPhysics;
+            playerSprite.color = new Color(1, 1, 1, 1);
+            // player.freezeRotation = false;
+            Debug.Log("Player left skateboard!");
         }
+    }
+
+    private void OnTriggerStay2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("Skateboard"))
+        {
+            if (player.velocity.magnitude < 0.1)
+            {
+                GameOver();
+            }
+            else if (player.rotation > 10 || player.rotation < -10)
+            {
+                RotateForward(0f, 50f * Time.fixedDeltaTime);
+            }
+        }
+    }
+
+    void InstantiateSkateboard()
+    {
+        Vector2 skatePos = new Vector2(player.position.x, -4.46f);
+        Vector2 skateVel = new Vector2(player.velocity.magnitude, 0);
+        GameObject newSkateboard = Instantiate(skateboard, skatePos, Quaternion.identity);
+        // set newSkateboard horizontal velocity to be the same as the player's
+        newSkateboard.GetComponent<Rigidbody2D>().velocity = skateVel;
+    }
+
+    void GameOver()
+    {
+        // player.velocity = Vector2.zero;
+        // player.MoveRotation(0f);
+        player.bodyType = RigidbodyType2D.Static;
+        Debug.Log("Game Over!");
+        EditorApplication.isPlaying = false;
     }
 }
