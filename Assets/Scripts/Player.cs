@@ -17,6 +17,9 @@ public class Player : MonoBehaviour
     public PhysicsMaterial2D onSkatePhysics;
     private Rigidbody2D activeSkateboard = null;
     public float speed = 10f;
+    // private bool animateRotation = false;
+    // private float targetAngle;
+    // private bool flapping = false;
     // public float rotationSpeed = 1000f;
     private bool launched = false;
     // Start is called before the first frame update
@@ -31,6 +34,7 @@ public class Player : MonoBehaviour
         // Debug.Log("Vertical velocity: " + player.velocity.y + ", Horizontal velocity: " + player.velocity.x + ", Magnitude: " + player.velocity.magnitude);
         if (Input.GetKeyDown(KeyCode.Space))
         {
+            // animateRotation = true;
             if (!launched)
             {
                 player.bodyType = RigidbodyType2D.Dynamic;
@@ -56,16 +60,45 @@ public class Player : MonoBehaviour
     {
         if (activeSkateboard == null && player.velocity.magnitude > 0 && player.position.y > -3.91)
         {
-            float increment = 150 * Time.fixedDeltaTime;
             float angle = Mathf.Atan2(player.velocity.y, player.velocity.x) * Mathf.Rad2Deg;
-            RotateForward(angle, increment);
+            player.MoveRotation(angle + 5 * Time.fixedDeltaTime);
         }
     }
 
-    private void RotateForward(float angle, float incrementSpeed)
+    // void FixedUpdate()
+    // {
+        // if (activeSkateboard == null && player.velocity.magnitude > 0 && player.position.y > -3.91)
+        // {
+            // if (animateRotation)
+            // {
+                // float increment = 150 * Time.fixedDeltaTime;
+                // targetAngle = GetDirectionAngle();
+                // AnimateRotateForward(targetAngle, increment);
+                // animateRotation = false;
+                // flapping = true;
+            // }
+            // else if (!flapping || player.rotation == targetAngle)
+            // {
+                // flapping = false;
+                // RotateForwardInstantly();
+            // }
+        // }
+    // }
+
+    // private float GetDirectionAngle()
+    // {
+        // return Mathf.Atan2(player.velocity.y, player.velocity.x) * Mathf.Rad2Deg;
+    // }
+
+    private void AnimateRotateForward(float angle, float incrementSpeed)
     {
         player.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, angle), incrementSpeed));
     }
+
+    // private void RotateForwardInstantly()
+    // {
+        // player.rotation = GetDirectionAngle();
+    // }
 
     public void Launch(Vector2 direction)
     {
@@ -123,10 +156,6 @@ public class Player : MonoBehaviour
             player.sharedMaterial = onSkatePhysics;
             activeSkateboard = collision.gameObject.GetComponent<Rigidbody2D>();
             playerSprite.color = new Color(0.2235294f, 0.4156863f, 0.5490196f, 0.75f);
-            // player.MoveRotation(0f);
-            // float increment = 10 * Time.fixedDeltaTime;
-            // player.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, 0), increment));
-            //player.freezeRotation = true;
             Debug.Log("Player hoped on skateboard!");
         }
         else
@@ -160,8 +189,16 @@ public class Player : MonoBehaviour
         {
             // onSkateboard = false;
             activeSkateboard = null;
-            player.sharedMaterial = bouncyPickup ? bouncyPhysics : defaultPhysics;
-            playerSprite.color = new Color(1, 1, 1, 1);
+            if (bouncyPickup)
+            {
+                player.sharedMaterial = bouncyPhysics;
+                playerSprite.color = new Color(0.6705883f, 0.254902f, 0.7372549f, 0.75f);
+            }
+            else
+            {
+                player.sharedMaterial = defaultPhysics;
+                playerSprite.color = new Color(1, 1, 1, 1);
+            }
             // player.freezeRotation = false;
             Debug.Log("Player left skateboard!");
         }
@@ -175,9 +212,9 @@ public class Player : MonoBehaviour
             {
                 GameOver();
             }
-            else if (player.rotation > 10 || player.rotation < -10)
+            else if (player.rotation != 0)
             {
-                RotateForward(0f, 50f * Time.fixedDeltaTime);
+                AnimateRotateForward(0, 150 * Time.fixedDeltaTime);
             }
         }
     }

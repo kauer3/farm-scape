@@ -2,9 +2,10 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Pickup : MonoBehaviour
+public class Skateboard : MonoBehaviour
 {
     private Camera cam;
+    public Rigidbody2D skateRb;
 
     private void Start()
     {
@@ -12,7 +13,7 @@ public class Pickup : MonoBehaviour
     }
     private void Update()
     {
-        if (transform.position.x < cam.transform.position.x - 10)
+        if (skateRb.velocity.magnitude < 1 && transform.position.x < cam.transform.position.x - 10)
         {
             Destroy(gameObject);
         }

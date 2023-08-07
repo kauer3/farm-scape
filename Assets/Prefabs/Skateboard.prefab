@@ -184,6 +184,7 @@ GameObject:
   - component: {fileID: 935587506}
   - component: {fileID: -6466183980237566612}
   - component: {fileID: 6066169942287235459}
+  - component: {fileID: 4475182761864062593}
   m_Layer: 3
   m_Name: Skateboard
   m_TagString: Skateboard
@@ -273,7 +274,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 1
-  m_LinearDrag: 0.1
+  m_LinearDrag: 0.05
   m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 0}
@@ -283,9 +284,9 @@ Rigidbody2D:
   m_ExcludeLayers:
     serializedVersion: 2
     m_Bits: 0
-  m_Interpolate: 0
+  m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 0
+  m_CollisionDetection: 1
   m_Constraints: 0
 --- !u!61 &9039913827423984594
 BoxCollider2D:
@@ -463,3 +464,16 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 0.985, y: 0.26}
   m_EdgeRadius: 0
+--- !u!114 &4475182761864062593
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7301231475686685852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bb2b50f1658b3c04084889fef372a602, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  skateRb: {fileID: 7301231475686685853}
