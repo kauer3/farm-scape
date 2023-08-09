@@ -9,6 +9,7 @@ TagManager:
   - Boost
   - Bouncy
   - Skateboard
+  - Egg Pickup
   layers:
   - Default
   - TransparentFX

@@ -9,9 +9,14 @@ public class Player : MonoBehaviour
     // private bool onSkateboard = false;
     private bool skatePickup = false;
     private bool bouncyPickup = false;
+    private bool expellingEggs = false;
+    private int eggCounter = 0;
+    private float eggTimer = 0f;
+    private float eggExpelDelay = .5f;
     public Rigidbody2D player;
     public SpriteRenderer playerSprite;
     public GameObject skateboard;
+    public GameObject egg;
     public PhysicsMaterial2D defaultPhysics;
     public PhysicsMaterial2D bouncyPhysics;
     public PhysicsMaterial2D onSkatePhysics;
@@ -54,11 +59,27 @@ public class Player : MonoBehaviour
                 Launch(Vector2.up * clippedFlapStrength);
             }
         }
+
+        if (eggCounter > 0)
+        {
+            if (eggTimer < eggExpelDelay)
+            {
+                eggTimer += Time.deltaTime;
+                Debug.Log("Egg timer: " + eggTimer);
+            }
+            else
+            {
+                Debug.Log("Time to expel egg");
+                ExpelEgg();
+                eggCounter--;
+                eggTimer = 0f;
+            }
+        }
     }
 
     void FixedUpdate()
     {
-        if (activeSkateboard == null && player.velocity.magnitude > 0 && player.position.y > -3.91)
+        if (!expellingEggs && activeSkateboard == null && player.velocity.magnitude > 0 && player.position.y > -3.91)
         {
             float angle = Mathf.Atan2(player.velocity.y, player.velocity.x) * Mathf.Rad2Deg;
             player.MoveRotation(angle + 5 * Time.fixedDeltaTime);
@@ -178,6 +199,11 @@ public class Player : MonoBehaviour
                 player.sharedMaterial = bouncyPhysics;
                 playerSprite.color = new Color(0.6705883f, 0.254902f, 0.7372549f, 0.75f);
             }
+            else if (obj.CompareTag("Egg Pickup"))
+            {
+                Debug.Log("Picked up egg!");
+                eggCounter = 5;
+            }
 
             Destroy(obj);
         }
@@ -226,6 +252,22 @@ public class Player : MonoBehaviour
         GameObject newSkateboard = Instantiate(skateboard, skatePos, Quaternion.identity);
         // set newSkateboard horizontal velocity to be the same as the player's
         newSkateboard.GetComponent<Rigidbody2D>().velocity = skateVel;
+    }
+
+    private void ExpelEgg()
+    {
+        Debug.Log("Egg expelled!");
+        Vector3 position = new Vector3(-0.05f, -0.6f, 0);
+        float angle = 45f;
+        float force = 5f;
+        angle *= Mathf.Deg2Rad;
+        float xComponent = Mathf.Cos(angle * Mathf.PI / 180) * force;
+        float yComponent = Mathf.Sin(angle * Mathf.PI / 180) * force;
+        Vector2 forceApplied = new Vector2(xComponent, yComponent);
+
+        player.AddForce(forceApplied);
+        GameObject expelledEgg = Instantiate(egg, position, Quaternion.Euler(0, 0, 90), transform);
+        expelledEgg.gameObject.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * 5f, ForceMode2D.Impulse);
     }
 
     void GameOver()
