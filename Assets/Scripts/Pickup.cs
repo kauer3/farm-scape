@@ -10,6 +10,7 @@ public class Pickup : MonoBehaviour
     {
         cam = Camera.main;
     }
+
     private void Update()
     {
         if (transform.position.x < cam.transform.position.x - 10)

@@ -8,12 +8,6 @@ public class Spawner : MonoBehaviour
     private float timer = 0f;
     public GameObject[] pickups;
 
-    void Start()
-    {
-
-    }
-
-    // Spawn a square every second
     private void Update()
     {
         if (timer < spawnTime)

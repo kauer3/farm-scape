@@ -11,6 +11,7 @@ public class Skateboard : MonoBehaviour
     {
         cam = Camera.main;
     }
+
     private void Update()
     {
         if (skateRb.velocity.magnitude < 1 && transform.position.x < cam.transform.position.x - 10)

@@ -7,36 +7,60 @@ using UnityEngine;
 public class Player : MonoBehaviour
 {
     // private bool onSkateboard = false;
+    private float flapTimeLength = 0.05f;
+    private float flapTimer = 0.05f;
+    private Vector2 flapDirection;
+
     private bool skatePickup = false;
     private bool bouncyPickup = false;
+
     private bool expellingEggs = false;
-    private int eggCounter = 0;
-    private float eggTimer = 0f;
-    private float eggExpelDelay = .5f;
+    private int eggCounter;
+    //private float eggTimer = 0f;
+    private float eggExpelDelay = .25f;
+    private float eggPropulsionTimer = 1.25f;
+    private float eggPropulsionTimeLength = 1.25f;
+
+    private float rocketPropulsionTimeLength = 2f;
+    private float rocketTimer = 2f;
+
     public Rigidbody2D player;
+    private Rigidbody2D activeSkateboard = null;
     public SpriteRenderer playerSprite;
     public GameObject skateboard;
     public GameObject egg;
+
     public PhysicsMaterial2D defaultPhysics;
     public PhysicsMaterial2D bouncyPhysics;
     public PhysicsMaterial2D onSkatePhysics;
-    private Rigidbody2D activeSkateboard = null;
-    public float speed = 10f;
+    public float speed = 20f;
     // private bool animateRotation = false;
     // private float targetAngle;
     // private bool flapping = false;
     // public float rotationSpeed = 1000f;
     private bool launched = false;
-    // Start is called before the first frame update
+
     void Start()
     {
 
     }
 
-    // Make player face direction of movement
     void Update()
     {
         // Debug.Log("Vertical velocity: " + player.velocity.y + ", Horizontal velocity: " + player.velocity.x + ", Magnitude: " + player.velocity.magnitude);
+        ManageFlightInput();
+    }
+
+    void FixedUpdate()
+    {
+        ManageFlight();
+        ManageRocketPropulsion();
+        ManageEggPropulsion();
+        RotateTorwardsMovement();
+    }
+
+    private void ManageFlightInput()
+    {
         if (Input.GetKeyDown(KeyCode.Space))
         {
             // animateRotation = true;
@@ -54,30 +78,65 @@ public class Player : MonoBehaviour
                 // Debug.Log("upDiagonal: " + upDiagonal);
 
                 //Launch(Vector2.up * Mathf.Clamp(player.velocity.x / 4, 0f, 7f));
-                float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude : player.velocity.x;
-                float clippedFlapStrength = Mathf.Min(rawFlapStrength / 4, 7f);
-                Launch(Vector2.up * clippedFlapStrength);
-            }
-        }
-
-        if (eggCounter > 0)
-        {
-            if (eggTimer < eggExpelDelay)
-            {
-                eggTimer += Time.deltaTime;
-                Debug.Log("Egg timer: " + eggTimer);
-            }
-            else
-            {
-                Debug.Log("Time to expel egg");
-                ExpelEgg();
-                eggCounter--;
-                eggTimer = 0f;
+                // float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude : player.velocity.x;
+                // float clippedFlapStrength = Mathf.Min(rawFlapStrength / 4, 7f);
+                // float force = 100f;
+                // player.AddRelativeForce(Vector2.up * force, ForceMode2D.Force);
+                float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 3 + player.velocity.x * 2 : player.velocity.x * 5;
+                // float rawFlapStrength = player.velocity.x;
+                // float clippedFlapStrength = Mathf.Min(rawFlapStrength / 4, 7f);
+                float clippedFlapStrength = Mathf.Min(rawFlapStrength);
+                Debug.Log("rawFlapStrength: " + rawFlapStrength + ", clippedFlapStrength: " + clippedFlapStrength);
+                flapDirection = Vector2.up * clippedFlapStrength;
+                flapTimer = 0f;
             }
         }
     }
 
-    void FixedUpdate()
+    private void ManageFlight()
+    {
+        if (flapTimer < flapTimeLength)
+        {
+            player.AddRelativeForce(flapDirection, ForceMode2D.Force);
+            flapTimer += Time.deltaTime;
+        }
+    }
+
+    private void ManageRocketPropulsion()
+    {
+        if (rocketTimer < rocketPropulsionTimeLength)
+        {
+            PropulseWithRocket(player);
+            if (activeSkateboard)
+            {
+                PropulseWithRocket(activeSkateboard);
+            }
+            rocketTimer += Time.deltaTime;
+        }
+    }
+
+    private void PropulseWithRocket(Rigidbody2D rb)
+    {
+        rb.AddRelativeForce(Vector2.right * 35f, ForceMode2D.Force);
+    }
+
+    private void ManageEggPropulsion()
+    {
+        if (eggPropulsionTimer < eggPropulsionTimeLength)
+        {
+            player.AddForce(Vector2.up * 15, ForceMode2D.Force);
+            eggPropulsionTimer += Time.deltaTime;
+
+            if (eggPropulsionTimer / eggExpelDelay > eggCounter)
+            {
+                ExpelEgg();
+                eggCounter++;
+            }
+
+        }
+    }
+
+    private void RotateTorwardsMovement()
     {
         if (!expellingEggs && activeSkateboard == null && player.velocity.magnitude > 0 && player.position.y > -3.91)
         {
@@ -85,6 +144,21 @@ public class Player : MonoBehaviour
             player.MoveRotation(angle + 5 * Time.fixedDeltaTime);
         }
     }
+
+    // void ExpelEgg()
+    // {
+        // expellingEggs = true;
+        // Vector3 position = new Vector3(-0.05f, -0.35f, 0);
+        // GameObject newEgg = Instantiate(egg, transform.position + position, transform.rotation * Quaternion.Euler(0, 0, 90));
+        // newEgg.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 15, ForceMode2D.Impulse);
+        // StartCoroutine(ExpelEggCoroutine());
+    // }
+
+    // IEnumerator ExpelEggCoroutine()
+    // {
+        // yield return new WaitForSeconds(eggExpelDelay);
+        // expellingEggs = false;
+    // }
 
     // void FixedUpdate()
     // {
@@ -183,11 +257,7 @@ public class Player : MonoBehaviour
         {
             if (obj.CompareTag("Boost"))
             {
-                player.AddRelativeForce(Vector2.right * 35f, ForceMode2D.Impulse);
-                if (activeSkateboard)
-                {
-                    activeSkateboard.AddRelativeForce(Vector2.right * 35f, ForceMode2D.Impulse);
-                }
+                rocketTimer = 0;
             }
             else if (obj.CompareTag("Skate"))
             {
@@ -201,8 +271,9 @@ public class Player : MonoBehaviour
             }
             else if (obj.CompareTag("Egg Pickup"))
             {
-                Debug.Log("Picked up egg!");
-                eggCounter = 5;
+                eggCounter = 0;
+                ExpelEgg();
+                eggPropulsionTimer = 0;
             }
 
             Destroy(obj);
@@ -256,18 +327,19 @@ public class Player : MonoBehaviour
 
     private void ExpelEgg()
     {
-        Debug.Log("Egg expelled!");
-        Vector3 position = new Vector3(-0.05f, -0.6f, 0);
-        float angle = 45f;
-        float force = 5f;
-        angle *= Mathf.Deg2Rad;
-        float xComponent = Mathf.Cos(angle * Mathf.PI / 180) * force;
-        float yComponent = Mathf.Sin(angle * Mathf.PI / 180) * force;
-        Vector2 forceApplied = new Vector2(xComponent, yComponent);
+        Debug.Log(transform.rotation[2]);
+        Vector3 position = new Vector3(-0.05f, -0.35f, 0);
+        // float force = 5f;
+        // float angle = 90f * Mathf.Deg2Rad;
+        // float xComponent = Mathf.Cos(angle) * force;
+        // float yComponent = Mathf.Sin(angle) * force;
+        // Vector2 forceApplied = new Vector2(xComponent, yComponent);
 
-        player.AddForce(forceApplied);
-        GameObject expelledEgg = Instantiate(egg, position, Quaternion.Euler(0, 0, 90), transform);
-        expelledEgg.gameObject.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * 5f, ForceMode2D.Impulse);
+        // player.AddForce(Vector2.up * force, ForceMode2D.Force);
+
+        GameObject expelledEgg = Instantiate(egg, transform.position + position, transform.rotation * Quaternion.Euler(0, 0, 90));
+        Debug.Log(expelledEgg.transform.rotation);
+        expelledEgg.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * 4f, ForceMode2D.Impulse);
     }
 
     void GameOver()
