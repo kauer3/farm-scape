@@ -1,11 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine;
 
 public class Player : MonoBehaviour
 {
+    public TMP_Text positionIndicator;
+    private int positionX;
+    private int positionY;
+    private Vector2 position;
+
     // private bool onSkateboard = false;
     private float flapTimeLength = 0.05f;
     private float flapTimer = 0.05f;
@@ -49,6 +55,7 @@ public class Player : MonoBehaviour
     {
         // Debug.Log("Vertical velocity: " + player.velocity.y + ", Horizontal velocity: " + player.velocity.x + ", Magnitude: " + player.velocity.magnitude);
         ManageFlightInput();
+        UpdatePositionIndicator();
     }
 
     void FixedUpdate()
@@ -340,6 +347,16 @@ public class Player : MonoBehaviour
         GameObject expelledEgg = Instantiate(egg, transform.position + position, transform.rotation * Quaternion.Euler(0, 0, 90));
         Debug.Log(expelledEgg.transform.rotation);
         expelledEgg.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * 4f, ForceMode2D.Impulse);
+    }
+
+    void UpdatePositionIndicator()
+    {
+        Vector2 newPosition = Vector2Int.RoundToInt(new Vector2(transform.position.x + 3.25f, transform.position.y + 3.86f) / 4);
+        if (newPosition != position)
+        {
+            position = newPosition;
+            positionIndicator.text = "Distance: " + newPosition.x + "m    Altitude: " + newPosition.y + "m";
+        }
     }
 
     void GameOver()
