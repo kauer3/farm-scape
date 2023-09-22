@@ -7,9 +7,8 @@ using UnityEngine;
 
 public class Player : MonoBehaviour
 {
-    public TMP_Text positionIndicator;
-    private int positionX;
-    private int positionY;
+    public TMP_Text distanceIndicator;
+    public TMP_Text altitudeIndicator;
     private Vector2 position;
 
     // private bool onSkateboard = false;
@@ -355,7 +354,8 @@ public class Player : MonoBehaviour
         if (newPosition != position)
         {
             position = newPosition;
-            positionIndicator.text = "Distance: " + newPosition.x + "m    Altitude: " + newPosition.y + "m";
+            distanceIndicator.text = "Distance: " + newPosition.x + "m";
+            altitudeIndicator.text = "Altitude: " + newPosition.y + "m";
         }
     }
 
