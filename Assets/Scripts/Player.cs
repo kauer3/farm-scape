@@ -92,7 +92,7 @@ public class Player : MonoBehaviour
                 // float rawFlapStrength = player.velocity.x;
                 // float clippedFlapStrength = Mathf.Min(rawFlapStrength / 4, 7f);
                 float clippedFlapStrength = Mathf.Min(rawFlapStrength);
-                Debug.Log("rawFlapStrength: " + rawFlapStrength + ", clippedFlapStrength: " + clippedFlapStrength);
+                // Debug.Log("rawFlapStrength: " + rawFlapStrength + ", clippedFlapStrength: " + clippedFlapStrength);
                 flapDirection = Vector2.up * clippedFlapStrength;
                 flapTimer = 0f;
             }
@@ -264,6 +264,8 @@ public class Player : MonoBehaviour
             if (obj.CompareTag("Boost"))
             {
                 rocketTimer = 0;
+                Destroy(obj.transform.parent.gameObject);
+                return;
             }
             else if (obj.CompareTag("Skate"))
             {
