@@ -10,10 +10,10 @@ GameObject:
   m_Component:
   - component: {fileID: 6175480905156697390}
   - component: {fileID: 3973900699126028840}
-  - component: {fileID: 5825305958321862718}
+  - component: {fileID: 199640408829496820}
   - component: {fileID: 5156800252390827073}
   m_Layer: 0
-  m_Name: Square
+  m_Name: HayCircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -75,7 +75,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: -5177388603050735206, guid: 8884154dfe85442a3a3578be807dbcdf, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 5036077c13163e94895541d17d10c9dd, type: 3}
   m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -86,8 +86,8 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!61 &5825305958321862718
-BoxCollider2D:
+--- !u!58 &199640408829496820
+CircleCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -95,7 +95,7 @@ BoxCollider2D:
   m_GameObject: {fileID: 2455027595164549516}
   m_Enabled: 1
   m_Density: 1
-  m_Material: {fileID: 6200000, guid: 11ff2900be8e30c45ab15074a7ed4aac, type: 2}
+  m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -118,19 +118,9 @@ BoxCollider2D:
   m_IsTrigger: 0
   m_UsedByEffector: 0
   m_UsedByComposite: 0
-  m_Offset: {x: 0, y: 0}
-  m_SpriteTilingProperty:
-    border: {x: 0.25, y: 0.25, z: 0.25, w: 0.25}
-    pivot: {x: 0.5, y: 0.5}
-    oldSize: {x: 1, y: 1}
-    newSize: {x: 1, y: 1}
-    adaptiveTilingThreshold: 0.5
-    drawMode: 0
-    adaptiveTiling: 0
-  m_AutoTiling: 0
+  m_Offset: {x: 0.015, y: 0.03}
   serializedVersion: 2
-  m_Size: {x: 0.49, y: 0.49}
-  m_EdgeRadius: 0.25
+  m_Radius: 0.47
 --- !u!50 &5156800252390827073
 Rigidbody2D:
   serializedVersion: 4
@@ -143,7 +133,7 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.5
+  m_Mass: 0.35
   m_LinearDrag: 0
   m_AngularDrag: 0.05
   m_GravityScale: 1

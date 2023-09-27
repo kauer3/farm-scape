@@ -6,6 +6,6 @@ PhysicsMaterial2D:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: Square
-  friction: 0.4
-  bounciness: 0.2
+  m_Name: Hay
+  friction: 0.35
+  bounciness: 0.15
