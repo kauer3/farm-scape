@@ -14,7 +14,7 @@ public class Skateboard : MonoBehaviour
 
     private void Update()
     {
-        if (skateRb.velocity.magnitude < 1 && transform.position.x < cam.transform.position.x - 10)
+        if (skateRb.velocity.magnitude < 1 && transform.position.x < cam.transform.position.x - 20)
         {
             Destroy(gameObject);
         }

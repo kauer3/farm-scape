@@ -1,15 +1,23 @@
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
+using Unity.VisualScripting;
 using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine;
+using Cinemachine;
 
 public class Player : MonoBehaviour
 {
+    public CinemachineVirtualCamera vcam;
+    private CinemachineFramingTransposer composer;
+    private CinemachineBasicMultiChannelPerlin noise;
+
     public TMP_Text distanceIndicator;
     public TMP_Text altitudeIndicator;
     private Vector2 position;
+
+    private bool movingVertically = false;
 
     // private bool onSkateboard = false;
     private float flapTimeLength = 0.05f;
@@ -45,20 +53,22 @@ public class Player : MonoBehaviour
     // public float rotationSpeed = 1000f;
     private bool launched = false;
 
-    void Start()
+    void Awake()
     {
-
+        composer = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
+        noise = vcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
     }
 
     void Update()
     {
-        // Debug.Log("Vertical velocity: " + player.velocity.y + ", Horizontal velocity: " + player.velocity.x + ", Magnitude: " + player.velocity.magnitude);
         ManageFlightInput();
         UpdatePositionIndicator();
+        ManageCameraShake();
     }
 
     void FixedUpdate()
     {
+        // ManageCameraDeadZone();
         ManageFlight();
         ManageRocketPropulsion();
         ManageEggPropulsion();
@@ -348,6 +358,44 @@ public class Player : MonoBehaviour
         GameObject expelledEgg = Instantiate(egg, transform.position + position, transform.rotation * Quaternion.Euler(0, 0, 90));
         Debug.Log(expelledEgg.transform.rotation);
         expelledEgg.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * 4f, ForceMode2D.Impulse);
+    }
+
+    void ManageCameraDeadZone()
+    {
+        /*
+        float horizontalVelocity = Mathf.Abs(player.velocity.x);
+        float verticalVelocity = Mathf.Abs(player.velocity.y);
+        if (!movingVertically && verticalVelocity > horizontalVelocity)
+        {
+            // composer.m_DeadZoneWidth = width;
+            composer.m_DeadZoneHeight = 0.1f;
+            movingVertically = true;
+        }
+        else if (movingVertically && verticalVelocity <= horizontalVelocity)
+        {
+            // composer.m_DeadZoneWidth = width;
+            composer.m_DeadZoneHeight = 0.5f;
+            movingVertically = false;
+        }
+        */
+    }
+
+    void ManageCameraShake()
+    {
+        // Debug.Log("Vertical velocity: " + player.velocity.y + ", Horizontal velocity: " + player.velocity.x + ", Magnitude: " + player.velocity.magnitude);
+        if (player.velocity.magnitude > 20)
+        {
+            float noiseIntensity = Mathf.Clamp(player.velocity.magnitude / 20 - 1, 0, 2.5f);
+            if (Mathf.Abs(noise.m_AmplitudeGain - noiseIntensity) > 0.1)
+            {
+                noise.m_AmplitudeGain = noiseIntensity;
+                Debug.Log("Noise Intensity: " + noiseIntensity);
+            }
+        }
+        else if (noise.m_AmplitudeGain > 0)
+        {
+            noise.m_AmplitudeGain = 0;
+        }
     }
 
     void UpdatePositionIndicator()

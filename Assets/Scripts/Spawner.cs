@@ -23,6 +23,6 @@ public class Spawner : MonoBehaviour
 
     void Spawn(GameObject collectable)
     {
-        Instantiate(collectable, new Vector2(transform.position.x + 10, Mathf.Max(transform.position.y + Random.Range(-5, 5), -3.90f)), Quaternion.identity);
+        Instantiate(collectable, new Vector2(transform.position.x + 20, Mathf.Max(transform.position.y + Random.Range(-5, 5), -3.90f)), Quaternion.identity);
     }
 }
