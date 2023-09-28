@@ -17,8 +17,6 @@ public class Player : MonoBehaviour
     public TMP_Text altitudeIndicator;
     private Vector2 position;
 
-    private bool movingVertically = false;
-
     // private bool onSkateboard = false;
     private float flapTimeLength = 0.05f;
     private float flapTimer = 0.05f;
@@ -68,7 +66,6 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        // ManageCameraDeadZone();
         ManageFlight();
         ManageRocketPropulsion();
         ManageEggPropulsion();
@@ -358,26 +355,6 @@ public class Player : MonoBehaviour
         GameObject expelledEgg = Instantiate(egg, transform.position + position, transform.rotation * Quaternion.Euler(0, 0, 90));
         Debug.Log(expelledEgg.transform.rotation);
         expelledEgg.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * 4f, ForceMode2D.Impulse);
-    }
-
-    void ManageCameraDeadZone()
-    {
-        /*
-        float horizontalVelocity = Mathf.Abs(player.velocity.x);
-        float verticalVelocity = Mathf.Abs(player.velocity.y);
-        if (!movingVertically && verticalVelocity > horizontalVelocity)
-        {
-            // composer.m_DeadZoneWidth = width;
-            composer.m_DeadZoneHeight = 0.1f;
-            movingVertically = true;
-        }
-        else if (movingVertically && verticalVelocity <= horizontalVelocity)
-        {
-            // composer.m_DeadZoneWidth = width;
-            composer.m_DeadZoneHeight = 0.5f;
-            movingVertically = false;
-        }
-        */
     }
 
     void ManageCameraShake()

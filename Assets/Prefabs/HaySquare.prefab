@@ -12,6 +12,8 @@ GameObject:
   - component: {fileID: 3973900699126028840}
   - component: {fileID: 5825305958321862718}
   - component: {fileID: 5156800252390827073}
+  - component: {fileID: 2938526109281458260}
+  - component: {fileID: 5930421113417054590}
   m_Layer: 0
   m_Name: HaySquare
   m_TagString: Untagged
@@ -158,3 +160,29 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &2938526109281458260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2455027595164549516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 3b9cbed03c9e2bd48a47d5b834e2b905, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  playerForce: 15
+  force: 30
+--- !u!114 &5930421113417054590
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2455027595164549516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f934ed07f2c28b747bfa0a83d881f313, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 

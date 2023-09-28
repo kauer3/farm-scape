@@ -4,25 +4,43 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public float spawnTime = 1f;
-    private float timer = 0f;
+    public float nextPickupPosition;
+    public float nextGroundObstaclePosition;
     public GameObject[] pickups;
+    public GameObject[] groundObstacles;
+
+    private void Start()
+    {
+        nextPickupPosition = Random.Range(20, 30);
+        nextGroundObstaclePosition = Random.Range(100, 1000);
+    }
 
     private void Update()
     {
-        if (timer < spawnTime)
+        ManagePickups();
+        ManageObstacles();
+    }
+
+    void Spawn(GameObject[] objects, float yPosition)
+    {
+        Instantiate(objects[Random.Range(0, objects.Length)], new Vector2(transform.position.x + 20, yPosition), Quaternion.identity);
+    }
+
+    void ManagePickups()
+    {
+        if (transform.position.x > nextPickupPosition)
         {
-            timer += Time.deltaTime;
-        }
-        else
-        {
-            Spawn(pickups[Random.Range(0, pickups.Length)]);
-            timer = 0f;
+            Spawn(pickups, Mathf.Max(transform.position.y + Random.Range(-5, 5), -3.90f));
+            nextPickupPosition += Random.Range(3, 50);
         }
     }
 
-    void Spawn(GameObject collectable)
+    void ManageObstacles()
     {
-        Instantiate(collectable, new Vector2(transform.position.x + 20, Mathf.Max(transform.position.y + Random.Range(-5, 5), -3.90f)), Quaternion.identity);
+        if (transform.position.x > nextGroundObstaclePosition)
+        {
+            Spawn(groundObstacles, -4.18f);
+            nextGroundObstaclePosition += Random.Range(40, 500);
+        }
     }
 }
