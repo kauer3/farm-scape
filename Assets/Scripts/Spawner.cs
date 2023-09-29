@@ -34,7 +34,7 @@ public class Spawner : MonoBehaviour
     {
         if (transform.position.x > nextPickupPosition)
         {
-            Spawn(pickups, Mathf.Max(transform.position.y + Random.Range(-5, 5), -3.90f));
+            Spawn(pickups, Mathf.Max(transform.position.y + Random.Range(-5, 5), -2.2f));
             nextPickupPosition += Random.Range(3, 50);
         }
     }
@@ -52,7 +52,7 @@ public class Spawner : MonoBehaviour
         if (transform.position.x > nextBalloonPosition)
         {
             Instantiate(balloon, new Vector2(transform.position.x + 20, Mathf.Max(transform.position.y + Random.Range(-15, 5), -3.90f)), Quaternion.identity);
-            nextBalloonPosition += Random.Range(0, 100);
+            nextBalloonPosition += Random.Range(2, 100);
         }
     }
 }
