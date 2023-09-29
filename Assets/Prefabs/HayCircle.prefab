@@ -13,7 +13,8 @@ GameObject:
   - component: {fileID: 199640408829496820}
   - component: {fileID: 5156800252390827073}
   - component: {fileID: 1622638206019751418}
-  - component: {fileID: -1500239281756519193}
+  - component: {fileID: 7547558953159084111}
+  - component: {fileID: 1081619956879557055}
   m_Layer: 0
   m_Name: HayCircle
   m_TagString: Untagged
@@ -135,10 +136,10 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 0.35
+  m_Mass: 0.2
   m_LinearDrag: 0
-  m_AngularDrag: 0.05
-  m_GravityScale: 1
+  m_AngularDrag: 0.1
+  m_GravityScale: 0.8
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
@@ -162,9 +163,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b9cbed03c9e2bd48a47d5b834e2b905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  health: 100
   playerForce: 15
-  force: 30
---- !u!114 &-1500239281756519193
+  force: 50
+--- !u!114 &7547558953159084111
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -174,5 +176,17 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: f934ed07f2c28b747bfa0a83d881f313, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1081619956879557055
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2455027595164549516}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 857affda9a4f4dc40bbbdb9af5e6ac7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 

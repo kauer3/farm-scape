@@ -4,21 +4,25 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
-    public float nextPickupPosition;
-    public float nextGroundObstaclePosition;
+    private float nextPickupPosition;
+    private float nextGroundObstaclePosition;
+    private float nextBalloonPosition;
     public GameObject[] pickups;
     public GameObject[] groundObstacles;
+    public GameObject balloon;
 
     private void Start()
     {
         nextPickupPosition = Random.Range(20, 30);
         nextGroundObstaclePosition = Random.Range(100, 1000);
+        nextBalloonPosition = Random.Range(20, 100);
     }
 
     private void Update()
     {
         ManagePickups();
         ManageObstacles();
+        ManageBalloons();
     }
 
     void Spawn(GameObject[] objects, float yPosition)
@@ -41,6 +45,14 @@ public class Spawner : MonoBehaviour
         {
             Spawn(groundObstacles, -4.18f);
             nextGroundObstaclePosition += Random.Range(40, 500);
+        }
+    }
+    void ManageBalloons()
+    {
+        if (transform.position.x > nextBalloonPosition)
+        {
+            Instantiate(balloon, new Vector2(transform.position.x + 20, Mathf.Max(transform.position.y + Random.Range(-15, 5), -3.90f)), Quaternion.identity);
+            nextBalloonPosition += Random.Range(0, 100);
         }
     }
 }

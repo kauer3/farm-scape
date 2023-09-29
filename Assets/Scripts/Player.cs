@@ -230,7 +230,7 @@ public class Player : MonoBehaviour
                     player.velocity = new Vector2(player.velocity.magnitude, 3f);
                     InstantiateSkateboard();
                     skatePickup = false;
-                    Debug.Log("Instantiated Skateboard!");
+                    // Debug.Log("Instantiated Skateboard!");
                 }
             }
             else
@@ -264,7 +264,7 @@ public class Player : MonoBehaviour
             player.sharedMaterial = onSkatePhysics;
             activeSkateboard = collision.gameObject.GetComponent<Rigidbody2D>();
             playerSprite.color = new Color(0.2235294f, 0.4156863f, 0.5490196f, 0.75f);
-            Debug.Log("Player hoped on skateboard!");
+            // Debug.Log("Player hoped on skateboard!");
         }
         else
         {
@@ -312,7 +312,7 @@ public class Player : MonoBehaviour
                 playerSprite.color = new Color(1, 1, 1, 1);
             }
             // player.freezeRotation = false;
-            Debug.Log("Player left skateboard!");
+            // Debug.Log("Player left skateboard!");
         }
     }
 
@@ -342,7 +342,7 @@ public class Player : MonoBehaviour
 
     private void ExpelEgg()
     {
-        Debug.Log(transform.rotation[2]);
+        // Debug.Log(transform.rotation[2]);
         Vector3 position = new Vector3(-0.05f, -0.35f, 0);
         // float force = 5f;
         // float angle = 90f * Mathf.Deg2Rad;
@@ -353,7 +353,7 @@ public class Player : MonoBehaviour
         // player.AddForce(Vector2.up * force, ForceMode2D.Force);
 
         GameObject expelledEgg = Instantiate(egg, transform.position + position, transform.rotation * Quaternion.Euler(0, 0, 90));
-        Debug.Log(expelledEgg.transform.rotation);
+        // Debug.Log(expelledEgg.transform.rotation);
         expelledEgg.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * 4f, ForceMode2D.Impulse);
     }
 
@@ -366,7 +366,7 @@ public class Player : MonoBehaviour
             if (Mathf.Abs(noise.m_AmplitudeGain - noiseIntensity) > 0.1)
             {
                 noise.m_AmplitudeGain = noiseIntensity;
-                Debug.Log("Noise Intensity: " + noiseIntensity);
+                // Debug.Log("Noise Intensity: " + noiseIntensity);
             }
         }
         else if (noise.m_AmplitudeGain > 0)

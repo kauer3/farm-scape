@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class DestructableObject : MonoBehaviour
 {
+    public float health;
     public float playerForce;
     public float force;
 
@@ -11,6 +12,19 @@ public class DestructableObject : MonoBehaviour
     {
         Debug.Log("Collision force: " + collision.relativeVelocity.magnitude);
         if (collision.relativeVelocity.magnitude > playerForce && collision.gameObject.CompareTag("Player") || collision.relativeVelocity.magnitude > force)
+        {
+            Destroy(gameObject);
+        }
+        else if (health > 0)
+        {
+            CheckHealth(collision.relativeVelocity.magnitude);
+        }
+    }
+
+    private void CheckHealth(float damage)
+    {
+        health -= damage;
+        if (health <= 0)
         {
             Destroy(gameObject);
         }
