@@ -25,16 +25,16 @@ public class Spawner : MonoBehaviour
         ManageBalloons();
     }
 
-    void Spawn(GameObject[] objects, float yPosition)
+    void Spawn(GameObject[] objects, float yPosition, float xPosition)
     {
-        Instantiate(objects[Random.Range(0, objects.Length)], new Vector2(transform.position.x + 20, yPosition), Quaternion.identity);
+        Instantiate(objects[Random.Range(0, objects.Length)], new Vector2(transform.position.x + xPosition, yPosition), Quaternion.identity);
     }
 
     void ManagePickups()
     {
         if (transform.position.x > nextPickupPosition)
         {
-            Spawn(pickups, Mathf.Max(transform.position.y + Random.Range(-5, 5), -2.2f));
+            Spawn(pickups, Mathf.Max(transform.position.y + Random.Range(-5, 5), -2.2f), 20);
             nextPickupPosition += Random.Range(3, 50);
         }
     }
@@ -43,7 +43,7 @@ public class Spawner : MonoBehaviour
     {
         if (transform.position.x > nextGroundObstaclePosition)
         {
-            Spawn(groundObstacles, -4.18f);
+            Spawn(groundObstacles, -4.18f, 100);
             nextGroundObstaclePosition += Random.Range(40, 500);
         }
     }
