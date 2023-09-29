@@ -13,7 +13,7 @@ public class Spawner : MonoBehaviour
 
     private void Start()
     {
-        nextPickupPosition = Random.Range(20, 30);
+        nextPickupPosition = Random.Range(15, 25);
         nextGroundObstaclePosition = Random.Range(100, 1000);
         nextBalloonPosition = Random.Range(20, 100);
     }
@@ -35,7 +35,7 @@ public class Spawner : MonoBehaviour
         if (transform.position.x > nextPickupPosition)
         {
             Spawn(pickups, Mathf.Max(transform.position.y + Random.Range(-5, 5), -2.2f), 20);
-            nextPickupPosition += Random.Range(3, 50);
+            nextPickupPosition += Random.Range(2, 25);
         }
     }
 
@@ -44,9 +44,10 @@ public class Spawner : MonoBehaviour
         if (transform.position.x > nextGroundObstaclePosition)
         {
             Spawn(groundObstacles, -4.18f, 100);
-            nextGroundObstaclePosition += Random.Range(30, 500);
+            nextGroundObstaclePosition += Random.Range(30, 400);
         }
     }
+
     void ManageBalloons()
     {
         if (transform.position.x > nextBalloonPosition)

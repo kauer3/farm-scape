@@ -8,9 +8,9 @@ public class CameraPosition : MonoBehaviour
 
     void Update()
     {
-        if (transform.position.y < 4.7 || transform.position.x < 8.8)
+        if (transform.position.x < 22 || transform.position.y < 13)
         {
-            transform.position = new Vector3(Mathf.Max(player.position.x, 8.8f), Mathf.Max(player.position.y, 4.7f), 0);
+            transform.position = new Vector3(Mathf.Max(player.position.x, 21), Mathf.Max(player.position.y, 12.5f), 0);
         }
         else
         {

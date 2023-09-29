@@ -44,11 +44,7 @@ public class Player : MonoBehaviour
     public PhysicsMaterial2D defaultPhysics;
     public PhysicsMaterial2D bouncyPhysics;
     public PhysicsMaterial2D onSkatePhysics;
-    public float speed = 20f;
-    // private bool animateRotation = false;
-    // private float targetAngle;
-    // private bool flapping = false;
-    // public float rotationSpeed = 1000f;
+    private float speed = 90;
     private bool launched = false;
 
     void Awake()
@@ -76,34 +72,33 @@ public class Player : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            // animateRotation = true;
             if (!launched)
             {
-                player.bodyType = RigidbodyType2D.Dynamic;
                 Launch(Vector2.right * speed);
-                launched = true;
             }
             else
             {
-                //float Vel = (player.velocity.x + player.velocity.y)/ 2;
-                //Vector2 upDiagonal = new Vector2(player.velocity.magnitude, player.velocity.magnitude).normalized;
-                // Debug.Log("velX: " + player.velocity.x + ", velY: " + player.velocity.y + ", vel: " + Vel + ", normalized: " + upDiagonal);
-                // Debug.Log("upDiagonal: " + upDiagonal);
-
-                //Launch(Vector2.up * Mathf.Clamp(player.velocity.x / 4, 0f, 7f));
-                // float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude : player.velocity.x;
-                // float clippedFlapStrength = Mathf.Min(rawFlapStrength / 4, 7f);
-                // float force = 100f;
-                // player.AddRelativeForce(Vector2.up * force, ForceMode2D.Force);
-                float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 3 + player.velocity.x * 2 : player.velocity.x * 5;
-                // float rawFlapStrength = player.velocity.x;
-                // float clippedFlapStrength = Mathf.Min(rawFlapStrength / 4, 7f);
-                float clippedFlapStrength = Mathf.Min(rawFlapStrength);
-                // Debug.Log("rawFlapStrength: " + rawFlapStrength + ", clippedFlapStrength: " + clippedFlapStrength);
+                float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 10.5f + player.velocity.x * 3 : player.velocity.x * 15;
+                float clippedFlapStrength = Mathf.Min(rawFlapStrength, 300f);
                 flapDirection = Vector2.up * clippedFlapStrength;
                 flapTimer = 0f;
+                Debug.Log("Flap direction: " + flapDirection);
             }
         }
+        //else if (Input.GetKey(KeyCode.LeftShift))
+        //{
+            //flapTimer = flapTimeLength;
+            //Vector2 direction = new Vector2(0, -50) * Time.fixedDeltaTime;
+            //if (player.velocity.y < 0)
+            //{
+                //player.AddForce(direction, ForceMode2D.Force);
+            //}
+            //else
+            //{
+                //player.AddRelativeForce(direction, ForceMode2D.Force);
+            //}
+            //Debug.Log("Going down");
+        //}
     }
 
     private void ManageFlight()
@@ -130,14 +125,14 @@ public class Player : MonoBehaviour
 
     private void PropulseWithRocket(Rigidbody2D rb)
     {
-        rb.AddRelativeForce(Vector2.right * 35f, ForceMode2D.Force);
+        rb.AddRelativeForce(Vector2.right * 55, ForceMode2D.Force);
     }
 
     private void ManageEggPropulsion()
     {
         if (eggPropulsionTimer < eggPropulsionTimeLength)
         {
-            player.AddForce(Vector2.up * 15, ForceMode2D.Force);
+            player.AddForce(Vector2.up * 30, ForceMode2D.Force);
             eggPropulsionTimer += Time.deltaTime;
 
             if (eggPropulsionTimer / eggExpelDelay > eggCounter)
@@ -158,85 +153,52 @@ public class Player : MonoBehaviour
         }
     }
 
-    // void ExpelEgg()
-    // {
-        // expellingEggs = true;
-        // Vector3 position = new Vector3(-0.05f, -0.35f, 0);
-        // GameObject newEgg = Instantiate(egg, transform.position + position, transform.rotation * Quaternion.Euler(0, 0, 90));
-        // newEgg.GetComponent<Rigidbody2D>().AddForce(Vector2.up * 15, ForceMode2D.Impulse);
-        // StartCoroutine(ExpelEggCoroutine());
-    // }
-
-    // IEnumerator ExpelEggCoroutine()
-    // {
-        // yield return new WaitForSeconds(eggExpelDelay);
-        // expellingEggs = false;
-    // }
-
-    // void FixedUpdate()
-    // {
-        // if (activeSkateboard == null && player.velocity.magnitude > 0 && player.position.y > -3.91)
-        // {
-            // if (animateRotation)
-            // {
-                // float increment = 150 * Time.fixedDeltaTime;
-                // targetAngle = GetDirectionAngle();
-                // AnimateRotateForward(targetAngle, increment);
-                // animateRotation = false;
-                // flapping = true;
-            // }
-            // else if (!flapping || player.rotation == targetAngle)
-            // {
-                // flapping = false;
-                // RotateForwardInstantly();
-            // }
-        // }
-    // }
-
-    // private float GetDirectionAngle()
-    // {
-        // return Mathf.Atan2(player.velocity.y, player.velocity.x) * Mathf.Rad2Deg;
-    // }
-
     private void AnimateRotateForward(float angle, float incrementSpeed)
     {
         player.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, angle), incrementSpeed));
     }
 
-    // private void RotateForwardInstantly()
-    // {
-        // player.rotation = GetDirectionAngle();
-    // }
-
     public void Launch(Vector2 direction)
     {
+        player.bodyType = RigidbodyType2D.Dynamic;
         player.AddRelativeForce(direction, ForceMode2D.Impulse);
+        launched = true;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground"))
+        if (!collision.gameObject.CompareTag("Balloon"))
         {
+            Debug.Log(collision.gameObject.tag);
             if (bouncyPickup)
             {
                 bouncyPickup = false;
                 player.sharedMaterial = defaultPhysics;
+                // Debug.Log("velocity before bounce: " + player.velocity);
+                // Vector2 newVelocity = new Vector2(Mathf.Max(player.velocity.x, 0), Mathf.Abs(player.velocity.y)) * 2.5f;
+                // Debug.Log("velocity after bounce: " + newVelocity);
+                // player.velocity = newVelocity;
                 playerSprite.color = new Color(1, 1, 1, 1);
             }
-            else if (player.rotation > -55 && player.rotation < 90 && player.velocity.magnitude >= 2)
+            else if (collision.gameObject.CompareTag("Ground"))
             {
-                if (skatePickup)
+                if (player.rotation > -55 && player.rotation < 90 && player.velocity.magnitude >= 5)
                 {
-                    player.velocity = new Vector2(player.velocity.magnitude, 3f);
-                    InstantiateSkateboard();
-                    skatePickup = false;
-                    // Debug.Log("Instantiated Skateboard!");
+                    if (skatePickup)
+                    {
+                        InstantiateSkateboard(player.velocity.magnitude);
+                        skatePickup = false;
+                    }
+                }
+                else
+                {
+                    GameOver();
                 }
             }
-            else
-            {
-                GameOver();
-            }
+        }
+        else
+        {
+            Debug.Log("Balloon collision");
         }
     }
 
@@ -331,10 +293,12 @@ public class Player : MonoBehaviour
         }
     }
 
-    void InstantiateSkateboard()
+    void InstantiateSkateboard(float velocity)
     {
+        velocity += velocity * 0.5f;
+        player.velocity = new Vector2(velocity, 3f);
         Vector2 skatePos = new Vector2(player.position.x, -4.46f);
-        Vector2 skateVel = new Vector2(player.velocity.magnitude, 0);
+        Vector2 skateVel = new Vector2(velocity, 0);
         GameObject newSkateboard = Instantiate(skateboard, skatePos, Quaternion.identity);
         // set newSkateboard horizontal velocity to be the same as the player's
         newSkateboard.GetComponent<Rigidbody2D>().velocity = skateVel;

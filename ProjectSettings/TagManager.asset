@@ -10,6 +10,7 @@ TagManager:
   - Bouncy
   - Skateboard
   - Egg Pickup
+  - Balloon
   layers:
   - Default
   - TransparentFX
