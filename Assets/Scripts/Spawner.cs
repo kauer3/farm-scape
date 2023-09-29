@@ -44,7 +44,7 @@ public class Spawner : MonoBehaviour
         if (transform.position.x > nextGroundObstaclePosition)
         {
             Spawn(groundObstacles, -4.18f, 100);
-            nextGroundObstaclePosition += Random.Range(40, 500);
+            nextGroundObstaclePosition += Random.Range(30, 500);
         }
     }
     void ManageBalloons()
