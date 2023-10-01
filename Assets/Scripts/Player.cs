@@ -22,6 +22,10 @@ public class Player : MonoBehaviour
     private float flapTimer = 0.05f;
     private Vector2 flapDirection;
 
+    private float skateBoostLength = 1;
+    private float skateBoostTimer = 1;
+    private Vector2 skateBoost;
+
     private bool skatePickup = false;
     private bool bouncyPickup = false;
 
@@ -32,11 +36,12 @@ public class Player : MonoBehaviour
     private float eggPropulsionTimer = 1.25f;
     private float eggPropulsionTimeLength = 1.25f;
 
-    private float rocketPropulsionTimeLength = 2f;
-    private float rocketTimer = 2f;
+    private float rocketPropulsionTimeLength = 1;
+    private float rocketTimer = 1;
 
     public Rigidbody2D player;
     private Rigidbody2D activeSkateboard = null;
+    private Rigidbody2D instantiatedSkateboard = null;
     public SpriteRenderer playerSprite;
     public GameObject skateboard;
     public GameObject egg;
@@ -44,7 +49,7 @@ public class Player : MonoBehaviour
     public PhysicsMaterial2D defaultPhysics;
     public PhysicsMaterial2D bouncyPhysics;
     public PhysicsMaterial2D onSkatePhysics;
-    private float speed = 90;
+    private float speed = 150;
     private bool launched = false;
 
     void Awake()
@@ -63,6 +68,7 @@ public class Player : MonoBehaviour
     void FixedUpdate()
     {
         ManageFlight();
+        ManageSkate();
         ManageRocketPropulsion();
         ManageEggPropulsion();
         RotateTorwardsMovement();
@@ -78,8 +84,8 @@ public class Player : MonoBehaviour
             }
             else
             {
-                float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 10.5f + player.velocity.x * 3 : player.velocity.x * 15;
-                float clippedFlapStrength = Mathf.Min(rawFlapStrength, 300f);
+                float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 17.5f + player.velocity.x * 5 : player.velocity.x * 25;
+                float clippedFlapStrength = Mathf.Min(rawFlapStrength, 500f);
                 flapDirection = Vector2.up * clippedFlapStrength;
                 flapTimer = 0f;
                 Debug.Log("Flap direction: " + flapDirection);
@@ -110,29 +116,45 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void ManageSkate()
+    {
+        if (skateBoostTimer < skateBoostLength)
+        {
+            Vector2 boost = skateBoost * (skateBoostLength - skateBoostTimer);
+            player.AddForce(boost * 1.3f, ForceMode2D.Force);
+            instantiatedSkateboard.AddForce(boost, ForceMode2D.Force);
+            skateBoostTimer += Time.deltaTime;
+        }
+        else if (instantiatedSkateboard)
+        {
+            instantiatedSkateboard = null;
+        }
+    }
+
     private void ManageRocketPropulsion()
     {
         if (rocketTimer < rocketPropulsionTimeLength)
         {
-            PropulseWithRocket(player);
+            float remainingTime = rocketPropulsionTimeLength - rocketTimer;
+            PropulseWithRocket(player, remainingTime);
             if (activeSkateboard)
             {
-                PropulseWithRocket(activeSkateboard);
+                PropulseWithRocket(activeSkateboard, remainingTime);
             }
             rocketTimer += Time.deltaTime;
         }
     }
 
-    private void PropulseWithRocket(Rigidbody2D rb)
+    private void PropulseWithRocket(Rigidbody2D rb, float time)
     {
-        rb.AddRelativeForce(Vector2.right * 55, ForceMode2D.Force);
+        rb.AddRelativeForce(new Vector2(300 * time, 0), ForceMode2D.Force);
     }
 
     private void ManageEggPropulsion()
     {
         if (eggPropulsionTimer < eggPropulsionTimeLength)
         {
-            player.AddForce(Vector2.up * 30, ForceMode2D.Force);
+            player.AddForce(Vector2.up * 50, ForceMode2D.Force);
             eggPropulsionTimer += Time.deltaTime;
 
             if (eggPropulsionTimer / eggExpelDelay > eggCounter)
@@ -225,8 +247,17 @@ public class Player : MonoBehaviour
             // onSkateboard = true;
             player.sharedMaterial = onSkatePhysics;
             activeSkateboard = collision.gameObject.GetComponent<Rigidbody2D>();
-            playerSprite.color = new Color(0.2235294f, 0.4156863f, 0.5490196f, 0.75f);
-            // Debug.Log("Player hoped on skateboard!");
+            // check is player or skateboard is faster
+            // add veloctity difference as force to slowest object
+            float speedDifference = Mathf.Abs(player.velocity.x - activeSkateboard.velocity.x);
+            if (player.velocity.magnitude > activeSkateboard.velocity.magnitude)
+            {
+                activeSkateboard.velocity = new Vector2(player.velocity.magnitude + speedDifference, activeSkateboard.velocity.y);
+            }
+            else
+            {
+                player.velocity = new Vector2(activeSkateboard.velocity.magnitude + speedDifference, player.velocity.y);
+            }
         }
         else
         {
@@ -262,7 +293,20 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Skateboard"))
         {
             // onSkateboard = false;
+            // if (activeSkateboard)
+            // {
             activeSkateboard = null;
+            // }
+            // if (instantiatedSkateboard)
+            // {
+            // instantiatedSkateboard = null;
+            // }
+            //check collision gameobject's velocity
+            Rigidbody2D collisionRb = collision.gameObject.GetComponent<Rigidbody2D>();
+            if (collisionRb.velocity.x > player.velocity.x)
+            {
+                player.velocity = new Vector2(collisionRb.velocity.magnitude, player.velocity.y);
+            }
             if (bouncyPickup)
             {
                 player.sharedMaterial = bouncyPhysics;
@@ -295,13 +339,14 @@ public class Player : MonoBehaviour
 
     void InstantiateSkateboard(float velocity)
     {
-        velocity += velocity * 0.5f;
         player.velocity = new Vector2(velocity, 3f);
         Vector2 skatePos = new Vector2(player.position.x, -4.46f);
         Vector2 skateVel = new Vector2(velocity, 0);
         GameObject newSkateboard = Instantiate(skateboard, skatePos, Quaternion.identity);
-        // set newSkateboard horizontal velocity to be the same as the player's
-        newSkateboard.GetComponent<Rigidbody2D>().velocity = skateVel;
+        instantiatedSkateboard = newSkateboard.GetComponent<Rigidbody2D>();
+        instantiatedSkateboard.velocity = skateVel;
+        skateBoostTimer = 0;
+        skateBoost = new Vector2((velocity + 100) * 0.35f, 0);
     }
 
     private void ExpelEgg()

@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Spawner : MonoBehaviour
 {
+    public Rigidbody2D player;
     private float nextPickupPosition;
     private float nextGroundObstaclePosition;
     private float nextBalloonPosition;
@@ -35,7 +36,7 @@ public class Spawner : MonoBehaviour
         if (transform.position.x > nextPickupPosition)
         {
             Spawn(pickups, Mathf.Max(transform.position.y + Random.Range(-5, 5), -2.2f), 20);
-            nextPickupPosition += Random.Range(2, 25);
+            nextPickupPosition += Random.Range(2, Mathf.Clamp(10, player.velocity.x, 50));
         }
     }
 

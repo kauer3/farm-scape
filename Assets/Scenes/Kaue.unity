@@ -544,7 +544,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 519420028}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.43888, y: 4.5000005, z: -10}
+  m_LocalPosition: {x: 8.889991, y: 4.5000005, z: -10}
   m_LocalScale: {x: 0, y: 0, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -998,8 +998,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1069335433}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 758459, y: -5, z: 1}
-  m_LocalScale: {x: 1516935.9, y: 1, z: 1}
+  m_LocalPosition: {x: 758459, y: -5.24, z: 2}
+  m_LocalScale: {x: 1516935.9, y: 1.5, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 0}
@@ -1480,8 +1480,8 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 3
-  m_LinearDrag: 0.2
+  m_Mass: 5
+  m_LinearDrag: 0.1
   m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 8c0e8933b6adc1949ba5bc6917452c73, type: 2}
@@ -1856,7 +1856,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1858224377}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10.4388895, y: -0.019999504, z: -10}
+  m_LocalPosition: {x: 8.89, y: -0.019999504, z: -10}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -1923,6 +1923,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a3ef25c20bfcf934cbdb5774c47cc1d3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  player: {fileID: 1795070812}
   pickups:
   - {fileID: 3066805559127418082, guid: b3624c70e58f5c64bbd4f80ecbbe62e6, type: 3}
   - {fileID: 3066805559127418082, guid: 70e54cc99078a314fb3814dcf953cbc1, type: 3}
