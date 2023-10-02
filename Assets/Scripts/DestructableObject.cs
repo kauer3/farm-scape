@@ -4,16 +4,19 @@ using UnityEngine;
 
 public class DestructableObject : MonoBehaviour
 {
-    public float health;
-    public float playerForce;
-    public float force;
+    [SerializeField] float health;
+    [SerializeField] float playerForce;
+    [SerializeField] float force;
+    [SerializeField] bool particlesOnCollision;
+    [SerializeField] ParticleSystem particles;
+    [SerializeField] SpriteRenderer spriteRenderer;
+    [SerializeField] Collider2D collider2d;
 
     private void OnCollisionEnter2D(Collision2D collision)
     {
-        Debug.Log("Collision force: " + collision.relativeVelocity.magnitude);
-        if (collision.relativeVelocity.magnitude > playerForce && collision.gameObject.CompareTag("Player") || collision.relativeVelocity.magnitude > force)
+        if (collision.gameObject.CompareTag("Player") && collision.relativeVelocity.magnitude > playerForce || collision.relativeVelocity.magnitude > force)
         {
-            Destroy(gameObject);
+            EmitParticles();
         }
         else if (health > 0)
         {
@@ -26,7 +29,21 @@ public class DestructableObject : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            Destroy(gameObject);
+            EmitParticles();
+        }
+        else if (particlesOnCollision)
+        {
+            particles.Emit(Mathf.RoundToInt(damage/2.5f));
         }
     }
+
+    private void EmitParticles()
+    {
+        Destroy(spriteRenderer);
+        collider2d.enabled = false;
+        ParticleSystem.MainModule main = particles.main;
+        main.stopAction = ParticleSystemStopAction.Destroy;
+        particles.Emit(125);
+    }
+
 }

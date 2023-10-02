@@ -29,15 +29,16 @@ public class Player : MonoBehaviour
     private bool skatePickup = false;
     private bool bouncyPickup = false;
 
-    private bool expellingEggs = false;
-    private int eggCounter;
+    private bool executingEggPropulsion = false;
+    //private int eggCounter;
     //private float eggTimer = 0f;
-    private float eggExpelDelay = .25f;
-    private float eggPropulsionTimer = 1.25f;
-    private float eggPropulsionTimeLength = 1.25f;
+    private float eggExpelDelay = .5f;
+    //private float eggPropulsionTimer = 1.25f;
+    //private float eggPropulsionTimeLength = 1.25f;
 
-    private float rocketPropulsionTimeLength = 1;
-    private float rocketTimer = 1;
+    private float rocketPropulsionTimeLength = 2;
+    private float rocketTimer = 2;
+    private float rocketPropulsion = 0.5f;
 
     public Rigidbody2D player;
     private Rigidbody2D activeSkateboard = null;
@@ -70,7 +71,7 @@ public class Player : MonoBehaviour
         ManageFlight();
         ManageSkate();
         ManageRocketPropulsion();
-        ManageEggPropulsion();
+        //ManageEggPropulsion();
         RotateTorwardsMovement();
     }
 
@@ -88,7 +89,7 @@ public class Player : MonoBehaviour
                 float clippedFlapStrength = Mathf.Min(rawFlapStrength, 500f);
                 flapDirection = Vector2.up * clippedFlapStrength;
                 flapTimer = 0f;
-                Debug.Log("Flap direction: " + flapDirection);
+                // Debug.Log("Flap direction: " + flapDirection);
             }
         }
         //else if (Input.GetKey(KeyCode.LeftShift))
@@ -133,42 +134,47 @@ public class Player : MonoBehaviour
 
     private void ManageRocketPropulsion()
     {
-        if (rocketTimer < rocketPropulsionTimeLength)
+        float force;
+        Vector2 forceVector;
+        if (rocketTimer < rocketPropulsionTimeLength )
         {
-            float remainingTime = rocketPropulsionTimeLength - rocketTimer;
-            PropulseWithRocket(player, remainingTime);
+            force = Mathf.Clamp(5, (200 - player.velocity.magnitude * 2) * rocketPropulsion, 300);
+            forceVector = new Vector2(force, 0);
+            // Debug.Log("Force: " + force);
+            player.AddRelativeForce(forceVector, ForceMode2D.Force);
             if (activeSkateboard)
             {
-                PropulseWithRocket(activeSkateboard, remainingTime);
+                activeSkateboard.AddRelativeForce(forceVector, ForceMode2D.Force);
             }
             rocketTimer += Time.deltaTime;
+            rocketPropulsion += Time.deltaTime;
         }
-    }
-
-    private void PropulseWithRocket(Rigidbody2D rb, float time)
-    {
-        rb.AddRelativeForce(new Vector2(300 * time, 0), ForceMode2D.Force);
-    }
-
-    private void ManageEggPropulsion()
-    {
-        if (eggPropulsionTimer < eggPropulsionTimeLength)
+        else
         {
-            player.AddForce(Vector2.up * 50, ForceMode2D.Force);
-            eggPropulsionTimer += Time.deltaTime;
-
-            if (eggPropulsionTimer / eggExpelDelay > eggCounter)
-            {
-                ExpelEgg();
-                eggCounter++;
-            }
-
+            rocketPropulsion = 0.5f;
         }
+    }
+
+    private IEnumerator ExecuteEggPropulsion()
+    {
+        while (executingEggPropulsion)
+        {
+            yield return new WaitForSeconds(0.1f);
+        }
+
+        executingEggPropulsion = true;
+        for (int i = 0; i < 5; i++)
+        {
+            player.AddForce(Vector2.right * 25, ForceMode2D.Impulse);
+            ExpelEgg();
+            yield return new WaitForSeconds(eggExpelDelay);
+        }
+        executingEggPropulsion = false;
     }
 
     private void RotateTorwardsMovement()
     {
-        if (!expellingEggs && activeSkateboard == null && player.velocity.magnitude > 0 && player.position.y > -3.91)
+        if (activeSkateboard == null && player.velocity.magnitude > 0 && player.position.y > -3.91)
         {
             float angle = Mathf.Atan2(player.velocity.y, player.velocity.x) * Mathf.Rad2Deg;
             player.MoveRotation(angle + 5 * Time.fixedDeltaTime);
@@ -189,38 +195,29 @@ public class Player : MonoBehaviour
 
     void OnCollisionEnter2D(Collision2D collision)
     {
-        if (!collision.gameObject.CompareTag("Balloon"))
+        if (collision.gameObject.CompareTag("Ground"))
         {
-            Debug.Log(collision.gameObject.tag);
             if (bouncyPickup)
             {
                 bouncyPickup = false;
                 player.sharedMaterial = defaultPhysics;
-                // Debug.Log("velocity before bounce: " + player.velocity);
-                // Vector2 newVelocity = new Vector2(Mathf.Max(player.velocity.x, 0), Mathf.Abs(player.velocity.y)) * 2.5f;
-                // Debug.Log("velocity after bounce: " + newVelocity);
-                // player.velocity = newVelocity;
                 playerSprite.color = new Color(1, 1, 1, 1);
+                //Vector2 force = Vector2.right * player.velocity.x * 20;
+                //player.AddForce(force, ForceMode2D.Impulse);
+                // Check velocity after bounce
             }
-            else if (collision.gameObject.CompareTag("Ground"))
+            else if (player.rotation > -55 && player.rotation < 90 && player.velocity.magnitude >= 5)
             {
-                if (player.rotation > -55 && player.rotation < 90 && player.velocity.magnitude >= 5)
+                if (skatePickup)
                 {
-                    if (skatePickup)
-                    {
-                        InstantiateSkateboard(player.velocity.magnitude);
-                        skatePickup = false;
-                    }
-                }
-                else
-                {
-                    GameOver();
+                    InstantiateSkateboard(player.velocity.magnitude);
+                    skatePickup = false;
                 }
             }
-        }
-        else
-        {
-            Debug.Log("Balloon collision");
+            else
+            {
+                GameOver();
+            }
         }
     }
 
@@ -279,9 +276,11 @@ public class Player : MonoBehaviour
             }
             else if (obj.CompareTag("Egg Pickup"))
             {
-                eggCounter = 0;
-                ExpelEgg();
-                eggPropulsionTimer = 0;
+                // eggCounter = 0;
+                // ExpelEgg();
+                // eggPropulsionTimer = 0;
+                // Start Egg Propulsion Coroutine
+                StartCoroutine(ExecuteEggPropulsion());
             }
 
             Destroy(obj);
@@ -401,6 +400,6 @@ public class Player : MonoBehaviour
         // player.MoveRotation(0f);
         player.bodyType = RigidbodyType2D.Static;
         Debug.Log("Game Over!");
-        EditorApplication.isPlaying = false;
+        // EditorApplication.isPlaying = false;
     }
 }
