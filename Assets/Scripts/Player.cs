@@ -40,12 +40,19 @@ public class Player : MonoBehaviour
     private float rocketTimer = 2;
     private float rocketPropulsion = 0.5f;
 
+    private float lastSpeed = 0;
+
     public Rigidbody2D player;
     private Rigidbody2D activeSkateboard = null;
     private Rigidbody2D instantiatedSkateboard = null;
     public SpriteRenderer playerSprite;
     public GameObject skateboard;
     public GameObject egg;
+
+    [SerializeField] ParticleSystem psOnCollision;
+    [SerializeField] ParticleSystem psOnMovement;
+    private ParticleSystem.MainModule psOnCollisionMain;
+    private ParticleSystem.MainModule psOnMovementMain;
 
     public PhysicsMaterial2D defaultPhysics;
     public PhysicsMaterial2D bouncyPhysics;
@@ -57,6 +64,8 @@ public class Player : MonoBehaviour
     {
         composer = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
         noise = vcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        psOnCollisionMain = psOnCollision.main;
+        psOnMovementMain = psOnMovement.main;
     }
 
     void Update()
@@ -73,6 +82,7 @@ public class Player : MonoBehaviour
         ManageRocketPropulsion();
         //ManageEggPropulsion();
         RotateTorwardsMovement();
+        ManageParticlesOnMove();
     }
 
     private void ManageFlightInput()
@@ -190,6 +200,8 @@ public class Player : MonoBehaviour
     {
         player.bodyType = RigidbodyType2D.Dynamic;
         player.AddRelativeForce(direction, ForceMode2D.Impulse);
+        //EmitParticles(100);
+        psOnMovement.Play();
         launched = true;
     }
 
@@ -219,6 +231,7 @@ public class Player : MonoBehaviour
                 GameOver();
             }
         }
+        EmitParticles(collision.gameObject.CompareTag("Balloon") ? collision.relativeVelocity.magnitude * 0.5f : collision.relativeVelocity.magnitude);
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -383,6 +396,23 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void EmitParticles(float force)
+    {
+        psOnCollisionMain.startSpeedMultiplier = force;
+        psOnCollision.Emit(Mathf.RoundToInt(force * 0.3f));
+    }
+
+    private void ManageParticlesOnMove()
+    {
+        if (player.velocity.magnitude > lastSpeed + 5 || player.velocity.magnitude < lastSpeed - 5)
+        {
+            ParticleSystem.EmissionModule emission = psOnMovement.emission;
+            emission.rateOverTime = player.velocity.magnitude * 0.002f;
+            lastSpeed = player.velocity.magnitude;
+            Debug.Log("Emission rate: " + emission.rateOverTime.constant + ", new speed: " + lastSpeed);
+        }
+    }
+
     void UpdatePositionIndicator()
     {
         Vector2 newPosition = Vector2Int.RoundToInt(new Vector2(transform.position.x + 3.25f, transform.position.y + 3.86f) / 4);
@@ -399,6 +429,7 @@ public class Player : MonoBehaviour
         // player.velocity = Vector2.zero;
         // player.MoveRotation(0f);
         player.bodyType = RigidbodyType2D.Static;
+        psOnMovement.Stop();
         Debug.Log("Game Over!");
         // EditorApplication.isPlaying = false;
     }

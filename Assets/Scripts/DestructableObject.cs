@@ -8,6 +8,8 @@ public class DestructableObject : MonoBehaviour
     [SerializeField] float playerForce;
     [SerializeField] float force;
     [SerializeField] bool particlesOnCollision;
+    [SerializeField] float particlesSpeedMultiplier;
+    [SerializeField] int particlesQuantity;
     [SerializeField] ParticleSystem particles;
     [SerializeField] SpriteRenderer spriteRenderer;
     [SerializeField] Collider2D collider2d;
@@ -16,7 +18,7 @@ public class DestructableObject : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Player") && collision.relativeVelocity.magnitude > playerForce || collision.relativeVelocity.magnitude > force)
         {
-            EmitParticles();
+            EmitParticles(collision.relativeVelocity.magnitude);
         }
         else if (health > 0)
         {
@@ -29,21 +31,21 @@ public class DestructableObject : MonoBehaviour
         health -= damage;
         if (health <= 0)
         {
-            EmitParticles();
+            EmitParticles(damage);
         }
         else if (particlesOnCollision)
         {
-            particles.Emit(Mathf.RoundToInt(damage/2.5f));
+            particles.Emit(Mathf.RoundToInt(damage/1.5f));
         }
     }
 
-    private void EmitParticles()
+    public void EmitParticles(float force)
     {
         Destroy(spriteRenderer);
         collider2d.enabled = false;
         ParticleSystem.MainModule main = particles.main;
+        main.startSpeedMultiplier = force * particlesSpeedMultiplier;
         main.stopAction = ParticleSystemStopAction.Destroy;
-        particles.Emit(125);
+        particles.Emit(particlesQuantity);
     }
-
 }

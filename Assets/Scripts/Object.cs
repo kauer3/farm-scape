@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class Object : MonoBehaviour
 {
+    [SerializeField] Rigidbody2D rb;
     private Camera cam;
 
     private void Start()
@@ -13,7 +14,7 @@ public class Object : MonoBehaviour
 
     private void Update()
     {
-        if (transform.position.x < cam.transform.position.x - 20)
+        if ((rb == null || rb.velocity.x < 1) && transform.position.x < cam.transform.position.x - 20)
         {
             Destroy(gameObject);
         }

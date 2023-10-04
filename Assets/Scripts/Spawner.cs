@@ -36,7 +36,7 @@ public class Spawner : MonoBehaviour
         if (transform.position.x > nextPickupPosition)
         {
             Spawn(pickups, Mathf.Max(transform.position.y + Random.Range(-5, 5), -2.2f), 20);
-            nextPickupPosition += Random.Range(2, Mathf.Clamp(10, player.velocity.x, 50));
+            nextPickupPosition += Random.Range(Mathf.Clamp(2, player.velocity.x * 0.35f, 30), Mathf.Clamp(30, player.velocity.x * 1.5f, 100));
         }
     }
 

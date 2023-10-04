@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 9049258860763232151}
   - component: {fileID: 2256891678619403172}
   - component: {fileID: 875859005930831261}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: HayCircle
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -168,9 +168,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 120
-  playerForce: 40
+  playerForce: 32
   force: 50
   particlesOnCollision: 1
+  particlesSpeedMultiplier: 1
+  particlesQuantity: 150
   particles: {fileID: 2256891678619403172}
   spriteRenderer: {fileID: 3973900699126028840}
   collider2d: {fileID: 199640408829496820}
@@ -186,6 +188,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f934ed07f2c28b747bfa0a83d881f313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 5156800252390827073}
 --- !u!114 &1081619956879557055
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -406,7 +409,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.25
+      scalar: 5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -841,7 +844,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 1
-    maxNumParticles: 125
+    maxNumParticles: 150
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -907,7 +910,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 0}
+    m_Position: {x: 0.016, y: 0.03, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1, y: 1, z: 1}
     placementMode: 0
@@ -984,11 +987,11 @@ ParticleSystem:
     m_TextureColorAffectsParticles: 1
     m_TextureAlphaAffectsParticles: 1
     m_TextureBilinearFiltering: 0
-    randomDirectionAmount: 0
-    sphericalDirectionAmount: 0
+    randomDirectionAmount: 1
+    sphericalDirectionAmount: 0.35
     randomPositionAmount: 0
     radius:
-      value: 0.46
+      value: 0.49
       mode: 0
       spread: 0
       speed:
@@ -1047,7 +1050,7 @@ ParticleSystem:
     arc:
       value: 360
       mode: 0
-      spread: 0
+      spread: 0.9
       speed:
         serializedVersion: 2
         minMaxState: 0
@@ -2927,11 +2930,11 @@ ParticleSystem:
     inWorldSpace: 1
     multiplyDragByParticleSize: 1
     multiplyDragByParticleVelocity: 1
-    dampen: 0.5
+    dampen: 0.2
     drag:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.5
+      scalar: 5
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -4087,12 +4090,12 @@ ParticleSystem:
         m_RotationOrder: 4
     minKillSpeed: 0
     maxKillSpeed: 10000
-    radiusScale: 1
+    radiusScale: 0.6
     collidesWith:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 1152
     maxCollisionShapes: 256
-    quality: 1
+    quality: 0
     voxelSize: 0.5
     collisionMessages: 0
     collidesWithDynamic: 1
@@ -8990,10 +8993,10 @@ ParticleSystem:
         m_RotationOrder: 4
     minKillSpeed: 0
     maxKillSpeed: 10000
-    radiusScale: 1
+    radiusScale: 0.6
     collidesWith:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 1664
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5

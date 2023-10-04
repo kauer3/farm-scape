@@ -3922,10 +3922,10 @@ ParticleSystem:
         m_RotationOrder: 4
     minKillSpeed: 0
     maxKillSpeed: 10000
-    radiusScale: 1
+    radiusScale: 0.6
     collidesWith:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 1664
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -4907,7 +4907,7 @@ GameObject:
   - component: {fileID: 803882825668908683}
   - component: {fileID: 5159166150544145749}
   - component: {fileID: 7595184555184890575}
-  m_Layer: 8
+  m_Layer: 9
   m_Name: HaySquare
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -5067,9 +5067,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   health: 100
-  playerForce: 35
+  playerForce: 32
   force: 50
   particlesOnCollision: 1
+  particlesSpeedMultiplier: 1
+  particlesQuantity: 150
   particles: {fileID: 7595184555184890575}
   spriteRenderer: {fileID: 3973900699126028840}
   collider2d: {fileID: 5825305958321862718}
@@ -5085,6 +5087,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f934ed07f2c28b747bfa0a83d881f313, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  rb: {fileID: 5156800252390827073}
 --- !u!114 &2897205791930770451
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5319,7 +5322,7 @@ ParticleSystem:
     startSpeed:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.25
+      scalar: 5
       minScalar: 5
       maxCurve:
         serializedVersion: 2
@@ -5372,8 +5375,8 @@ ParticleSystem:
     startColor:
       serializedVersion: 2
       minMaxState: 2
-      minColor: {r: 1, g: 0.82393795, b: 0.4481132, a: 1}
-      maxColor: {r: 1, g: 1, b: 1, a: 1}
+      minColor: {r: 1, g: 0.83296674, b: 0.4764151, a: 1}
+      maxColor: {r: 1, g: 0.954403, b: 0.8443396, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
@@ -5754,7 +5757,7 @@ ParticleSystem:
         m_RotationOrder: 4
     randomizeRotationDirection: 0
     gravitySource: 1
-    maxNumParticles: 125
+    maxNumParticles: 150
     customEmitterVelocity: {x: 0, y: 0, z: 0}
     size3D: 0
     rotation3D: 0
@@ -5820,7 +5823,7 @@ ParticleSystem:
     boxThickness: {x: 0, y: 0, z: 0}
     radiusThickness: 1
     donutRadius: 0.2
-    m_Position: {x: 0, y: 0, z: 0}
+    m_Position: {x: 0.016, y: 0.03, z: 0}
     m_Rotation: {x: 0, y: 0, z: 0}
     m_Scale: {x: 1, y: 1, z: 1}
     placementMode: 0
@@ -5897,11 +5900,11 @@ ParticleSystem:
     m_TextureColorAffectsParticles: 1
     m_TextureAlphaAffectsParticles: 1
     m_TextureBilinearFiltering: 0
-    randomDirectionAmount: 0
-    sphericalDirectionAmount: 0
+    randomDirectionAmount: 1
+    sphericalDirectionAmount: 0.35
     randomPositionAmount: 0
     radius:
-      value: 0.46
+      value: 0.49
       mode: 0
       spread: 0
       speed:
@@ -5960,7 +5963,7 @@ ParticleSystem:
     arc:
       value: 360
       mode: 0
-      spread: 0
+      spread: 0.9
       speed:
         serializedVersion: 2
         minMaxState: 0
@@ -7840,11 +7843,11 @@ ParticleSystem:
     inWorldSpace: 1
     multiplyDragByParticleSize: 1
     multiplyDragByParticleVelocity: 1
-    dampen: 0.5
+    dampen: 0.2
     drag:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 1.5
+      scalar: 5
       minScalar: 0
       maxCurve:
         serializedVersion: 2
@@ -9000,12 +9003,12 @@ ParticleSystem:
         m_RotationOrder: 4
     minKillSpeed: 0
     maxKillSpeed: 10000
-    radiusScale: 1
+    radiusScale: 0.6
     collidesWith:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 1152
     maxCollisionShapes: 256
-    quality: 1
+    quality: 0
     voxelSize: 0.5
     collisionMessages: 0
     collidesWithDynamic: 1

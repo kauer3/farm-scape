@@ -8,7 +8,7 @@ public class Balloon : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Skateboard"))
         {
-            Destroy(gameObject);
+            gameObject.GetComponent<DestructableObject>().EmitParticles(collision.relativeVelocity.magnitude);
         }
     }
 }
