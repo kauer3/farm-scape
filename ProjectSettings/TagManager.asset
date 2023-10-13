@@ -11,6 +11,7 @@ TagManager:
   - Skateboard
   - Egg Pickup
   - Balloon
+  - Speed Boost
   layers:
   - Default
   - TransparentFX

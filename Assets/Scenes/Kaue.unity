@@ -11736,6 +11736,7 @@ MonoBehaviour:
   - {fileID: 3066805559127418082, guid: 70e54cc99078a314fb3814dcf953cbc1, type: 3}
   - {fileID: 8891235687042673059, guid: a3da8aee8e6d99441891f71524bba358, type: 3}
   - {fileID: 3066805559127418082, guid: a251e15c37660d6468131cffdb5f61c0, type: 3}
+  - {fileID: 3066805559127418082, guid: d0dc7cae01031a6439c76845c10e7377, type: 3}
   groundObstacles:
   - {fileID: 3394934143123808101, guid: ac061a4dd1ee9e44e9de846e56c4acea, type: 3}
   - {fileID: 3394934143123808101, guid: 673cbf6712fe9674ca340820313f5b97, type: 3}
@@ -12155,7 +12156,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5398590943989157034, guid: 6fadf026be1ac2b42bf5b3dfb4b1df10, type: 3}
       propertyPath: m_IsActive
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6223095040540285665, guid: 6fadf026be1ac2b42bf5b3dfb4b1df10, type: 3}
       propertyPath: m_ConnectedAnchor.x

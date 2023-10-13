@@ -32,13 +32,17 @@ public class Player : MonoBehaviour
     private bool executingEggPropulsion = false;
     //private int eggCounter;
     //private float eggTimer = 0f;
-    private float eggExpelDelay = .5f;
+    private float eggExpelDelay = .35f;
     //private float eggPropulsionTimer = 1.25f;
     //private float eggPropulsionTimeLength = 1.25f;
 
     private float rocketPropulsionTimeLength = 2;
     private float rocketTimer = 2;
     private float rocketPropulsion = 0.5f;
+
+    private float speedBoostTimeLength = .3f;
+    private float speedBoostTimer = .3f;
+    // private float speedBoost = 0.5f;
 
     private float lastSpeed = 0;
 
@@ -80,6 +84,7 @@ public class Player : MonoBehaviour
         ManageFlight();
         ManageSkate();
         ManageRocketPropulsion();
+        ManageSpeedBoost();
         //ManageEggPropulsion();
         RotateTorwardsMovement();
         ManageParticlesOnMove();
@@ -146,7 +151,7 @@ public class Player : MonoBehaviour
     {
         float force;
         Vector2 forceVector;
-        if (rocketTimer < rocketPropulsionTimeLength )
+        if (rocketTimer < rocketPropulsionTimeLength)
         {
             force = Mathf.Clamp(5, (200 - player.velocity.magnitude * 2) * rocketPropulsion, 300);
             forceVector = new Vector2(force, 0);
@@ -165,6 +170,79 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void ManageSpeedBoost()
+    {
+        //float force;
+        //Vector2 forceVector;
+        if (speedBoostTimer < speedBoostTimeLength)
+        {
+            //force = Mathf.Clamp(5, (200 - player.velocity.magnitude * 2) * rocketPropulsion, 300);
+            //forceVector = new Vector2(force, 0);
+            // Debug.Log("Force: " + force);
+            Vector2 forceVector = Vector2.right * 500;
+            player.AddRelativeForce(forceVector, ForceMode2D.Force);
+            if (activeSkateboard)
+            {
+                activeSkateboard.AddRelativeForce(forceVector, ForceMode2D.Force);
+            }
+            speedBoostTimer += Time.deltaTime;
+            //rocketPropulsion += Time.deltaTime;
+            Debug.Log(speedBoostTimer);
+        }
+        //else
+        //{
+            //rocketPropulsion = 0.5f;
+        //}
+    }
+
+    //private IEnumerator ExecuteRocketPropulsion()
+    //{
+        //float force;
+        //Vector2 forceVector;
+        //for (int i = 0; i < rocketPropulsionTimeLength; i++)
+        //{
+            //force = Mathf.Clamp(5, (200 - player.velocity.magnitude * 2) * rocketPropulsion, 300);
+            //forceVector = new Vector2(force, 0);
+            //// Debug.Log("Force: " + force);
+            //player.AddRelativeForce(forceVector, ForceMode2D.Force);
+            //if (activeSkateboard)
+            //{
+                //activeSkateboard.AddRelativeForce(forceVector, ForceMode2D.Force);
+            //}
+            //rocketTimer += Time.deltaTime;
+            //rocketPropulsion += Time.deltaTime;
+            //yield return new WaitForSeconds(0.1f);
+        //}
+        //else
+        //{
+            //rocketPropulsion = 0.5f;
+        //}
+        //while (executingEggPropulsion)
+        //{
+            //yield return new WaitForSeconds(0.1f);
+        //}
+//
+        //executingEggPropulsion = true;
+        //for (int i = 0; i < 3; i++)
+        //{
+            //player.AddForce(Vector2.right * 50, ForceMode2D.Impulse);
+            //ExpelEgg();
+            //yield return new WaitForSeconds(eggExpelDelay);
+        //}
+        //executingEggPropulsion = false;
+    //}
+
+    //private IEnumerator ExecuteSpeedBoostPropulsion()
+    //{
+        //float time = 0;
+        //while (time < speedBoostTimeLength)
+        //{
+
+            //time += Time.fixedDeltaTime;
+            //yield return null;
+        //}
+    //}
+
     private IEnumerator ExecuteEggPropulsion()
     {
         while (executingEggPropulsion)
@@ -173,9 +251,9 @@ public class Player : MonoBehaviour
         }
 
         executingEggPropulsion = true;
-        for (int i = 0; i < 5; i++)
+        for (int i = 0; i < 3; i++)
         {
-            player.AddForce(Vector2.right * 25, ForceMode2D.Impulse);
+            player.AddForce(Vector2.right * 50, ForceMode2D.Impulse);
             ExpelEgg();
             yield return new WaitForSeconds(eggExpelDelay);
         }
@@ -276,6 +354,10 @@ public class Player : MonoBehaviour
                 rocketTimer = 0;
                 Destroy(obj.transform.parent.gameObject);
                 return;
+            }
+            else if (obj.CompareTag("Speed Boost"))
+            {
+                speedBoostTimer = 0;
             }
             else if (obj.CompareTag("Skate"))
             {
@@ -404,7 +486,7 @@ public class Player : MonoBehaviour
 
     private void ManageParticlesOnMove()
     {
-        if (player.velocity.magnitude > lastSpeed + 5 || player.velocity.magnitude < lastSpeed - 5)
+        if (player.velocity.magnitude > lastSpeed + 3 || player.velocity.magnitude < lastSpeed - 3)
         {
             ParticleSystem.EmissionModule emission = psOnMovement.emission;
             emission.rateOverTime = player.velocity.magnitude * 0.002f;
