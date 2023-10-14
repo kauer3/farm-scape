@@ -13,7 +13,7 @@ public class CinemachineManager : MonoBehaviour
         composer = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
     }
 
-    public void UpdateDeadZone(float width, float height)
+    void UpdateDeadZone(float width, float height)
     {
         composer.m_DeadZoneWidth = width;
         composer.m_DeadZoneHeight = height;

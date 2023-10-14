@@ -17,12 +17,12 @@ public class Hay : MonoBehaviour
         if (hay.velocity.magnitude > 5 && hayParticles.isStopped)
         {
             hayParticles.Play();
-            Debug.Log("Particles playing");
+            //Debug.Log("Particles playing");
         }
         else if (hay.velocity.magnitude < 1.5 && hayParticles.isPlaying)
         {
             hayParticles.Stop();
-            Debug.Log("Particles stopped");
+            //Debug.Log("Particles stopped");
         }
     }
 }

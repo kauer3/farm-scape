@@ -6431,7 +6431,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 6
-  m_LinearDrag: 0.175
+  m_LinearDrag: 0.15
   m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 8c0e8933b6adc1949ba5bc6917452c73, type: 2}
