@@ -21,6 +21,7 @@ public class Player : MonoBehaviour
     private float flapTimeLength = 0.05f;
     private float flapTimer = 0.05f;
     private Vector2 flapDirection;
+    private bool flapping = false;
 
     private float skateBoostLength = 1;
     private float skateBoostTimer = 1;
@@ -36,9 +37,7 @@ public class Player : MonoBehaviour
     //private float eggPropulsionTimer = 1.25f;
     //private float eggPropulsionTimeLength = 1.25f;
 
-    private float rocketPropulsionTimeLength = 2;
-    private float rocketTimer = 2;
-    private float rocketPropulsion = 0.5f;
+    private float rocketPropulsionTimeLength = 1.5f;
 
     private float speedBoostTimeLength = .3f;
     private float speedBoostTimer = .3f;
@@ -61,7 +60,7 @@ public class Player : MonoBehaviour
     public PhysicsMaterial2D defaultPhysics;
     public PhysicsMaterial2D bouncyPhysics;
     public PhysicsMaterial2D onSkatePhysics;
-    private float speed = 150;
+    private float speed = 200;
     private bool launched = false;
 
     void Awake()
@@ -76,18 +75,31 @@ public class Player : MonoBehaviour
     {
         ManageFlightInput();
         UpdatePositionIndicator();
-        ManageCameraShake();
+        //ManageCameraShake();
+        
+        // Zoom out camera when player is moving fast
+        //if (player.velocity.magnitude > 20)
+        //{
+            //composer.m_CameraDistance = Mathf.Clamp(player.velocity.magnitude / 10, 10, 20);
+        //}
+        //else if (composer.m_CameraDistance != 27)
+        //{
+            //composer.m_CameraDistance = 27;
+        //}
     }
 
     void FixedUpdate()
     {
-        ManageFlight();
+        //ManageFlight();
         ManageSkate();
-        ManageRocketPropulsion();
         ManageSpeedBoost();
         //ManageEggPropulsion();
         RotateTorwardsMovement();
         ManageParticlesOnMove();
+
+        // Create linear drag only on the horizonta axis
+        //Vector2 drag = new Vector2(player.velocity.x * -0.1f, 0);
+        //player.AddForce(drag, ForceMode2D.Force);
     }
 
     private void ManageFlightInput()
@@ -100,10 +112,12 @@ public class Player : MonoBehaviour
             }
             else
             {
-                float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 17.5f + player.velocity.x * 5 : player.velocity.x * 25;
-                float clippedFlapStrength = Mathf.Min(rawFlapStrength, 500f);
-                flapDirection = Vector2.up * clippedFlapStrength;
-                flapTimer = 0f;
+                //float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 17.5f + player.velocity.x * 5 : player.velocity.x * 25;
+                //float clippedFlapStrength = Mathf.Min(rawFlapStrength, 500f);
+                //flapDirection = Vector2.up * clippedFlapStrength;
+                //flapTimer = 0f;
+                StopCoroutine(ExecuteFlap());
+                StartCoroutine(ExecuteFlap());
                 // Debug.Log("Flap direction: " + flapDirection);
             }
         }
@@ -147,29 +161,6 @@ public class Player : MonoBehaviour
         }
     }
 
-    private void ManageRocketPropulsion()
-    {
-        float force;
-        Vector2 forceVector;
-        if (rocketTimer < rocketPropulsionTimeLength)
-        {
-            force = Mathf.Clamp(5, (200 - player.velocity.magnitude * 2) * rocketPropulsion, 300);
-            forceVector = new Vector2(force, 0);
-            // Debug.Log("Force: " + force);
-            player.AddRelativeForce(forceVector, ForceMode2D.Force);
-            if (activeSkateboard)
-            {
-                activeSkateboard.AddRelativeForce(forceVector, ForceMode2D.Force);
-            }
-            rocketTimer += Time.deltaTime;
-            rocketPropulsion += Time.deltaTime;
-        }
-        else
-        {
-            rocketPropulsion = 0.5f;
-        }
-    }
-
     private void ManageSpeedBoost()
     {
         //float force;
@@ -187,7 +178,7 @@ public class Player : MonoBehaviour
             }
             speedBoostTimer += Time.deltaTime;
             //rocketPropulsion += Time.deltaTime;
-            Debug.Log(speedBoostTimer);
+            //Debug.Log(speedBoostTimer);
         }
         //else
         //{
@@ -195,42 +186,55 @@ public class Player : MonoBehaviour
         //}
     }
 
-    //private IEnumerator ExecuteRocketPropulsion()
-    //{
-        //float force;
-        //Vector2 forceVector;
-        //for (int i = 0; i < rocketPropulsionTimeLength; i++)
-        //{
-            //force = Mathf.Clamp(5, (200 - player.velocity.magnitude * 2) * rocketPropulsion, 300);
-            //forceVector = new Vector2(force, 0);
-            //// Debug.Log("Force: " + force);
-            //player.AddRelativeForce(forceVector, ForceMode2D.Force);
-            //if (activeSkateboard)
-            //{
-                //activeSkateboard.AddRelativeForce(forceVector, ForceMode2D.Force);
-            //}
-            //rocketTimer += Time.deltaTime;
-            //rocketPropulsion += Time.deltaTime;
-            //yield return new WaitForSeconds(0.1f);
-        //}
-        //else
-        //{
-            //rocketPropulsion = 0.5f;
-        //}
-        //while (executingEggPropulsion)
-        //{
-            //yield return new WaitForSeconds(0.1f);
-        //}
-//
-        //executingEggPropulsion = true;
-        //for (int i = 0; i < 3; i++)
-        //{
-            //player.AddForce(Vector2.right * 50, ForceMode2D.Impulse);
-            //ExpelEgg();
-            //yield return new WaitForSeconds(eggExpelDelay);
-        //}
-        //executingEggPropulsion = false;
-    //}
+    private IEnumerator ExecuteFlap()
+    {
+        float timeElapsed = 0;
+        float lerpedValue;
+        float horizontalVelocity = Mathf.InverseLerp(0, player.velocity.magnitude, player.velocity.x); 
+        float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 28 + player.velocity.x * 8 : player.velocity.x * 40;
+        float clippedFlapStrength = Mathf.Min(rawFlapStrength, 1000);
+        //Debug.Log("Horizontal velocity: " + horizontalVelocity);
+        Debug.Log("Clipped flap strength: " + clippedFlapStrength);
+
+        flapping = true;
+        player.drag = 2;
+        while (timeElapsed < flapTimeLength)
+        {
+            float t = timeElapsed / flapTimeLength;
+            lerpedValue = Mathf.Lerp(clippedFlapStrength, clippedFlapStrength / 2, t);
+            player.drag = Mathf.SmoothStep(2, 0.1f, t);
+            player.AddRelativeForce(new Vector2(player.velocity.x * 0.05f, lerpedValue), ForceMode2D.Force);
+            timeElapsed += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+        player.drag = 0.1f;
+        flapping = false;
+    }
+
+    private IEnumerator ExecuteRocketPropulsion()
+    {
+        float timeElapsed = 0;
+        float timeAndVelocity = 0;
+        float lerpedValue;
+        int iterations = 0;
+
+        while (timeAndVelocity < rocketPropulsionTimeLength)
+        {
+            float t = timeAndVelocity / rocketPropulsionTimeLength;
+            lerpedValue = Mathf.SmoothStep(500 - player.velocity.magnitude * 4, 100, t);
+            //Debug.Log("Lerped value: " + lerpedValue);
+            player.AddRelativeForce(Vector2.right * lerpedValue, ForceMode2D.Force);
+            if (activeSkateboard)
+            {
+                activeSkateboard.AddRelativeForce(Vector2.right * lerpedValue, ForceMode2D.Force);
+            }
+            timeElapsed += Time.fixedDeltaTime;
+            timeAndVelocity = timeElapsed + Mathf.InverseLerp(0, 100, player.velocity.magnitude);
+            iterations++;
+            yield return new WaitForFixedUpdate();
+        }
+        //Debug.Log("Iterations: " + iterations);
+    }
 
     //private IEnumerator ExecuteSpeedBoostPropulsion()
     //{
@@ -251,9 +255,9 @@ public class Player : MonoBehaviour
         }
 
         executingEggPropulsion = true;
-        for (int i = 0; i < 3; i++)
+        for (int i = 0; i < 4; i++)
         {
-            player.AddForce(Vector2.right * 50, ForceMode2D.Impulse);
+            player.AddForce(Vector2.right * 35, ForceMode2D.Impulse);
             ExpelEgg();
             yield return new WaitForSeconds(eggExpelDelay);
         }
@@ -298,10 +302,15 @@ public class Player : MonoBehaviour
             }
             else if (player.rotation > -55 && player.rotation < 90 && player.velocity.magnitude >= 5)
             {
+                Debug.Log("Player touched ground!");
                 if (skatePickup)
                 {
                     InstantiateSkateboard(player.velocity.magnitude);
                     skatePickup = false;
+                }
+                else if (!flapping && player.drag < 1)
+                {
+                    player.drag = 1;
                 }
             }
             else
@@ -309,7 +318,10 @@ public class Player : MonoBehaviour
                 GameOver();
             }
         }
-        EmitParticles(collision.gameObject.CompareTag("Balloon") ? collision.relativeVelocity.magnitude * 0.5f : collision.relativeVelocity.magnitude);
+        EmitParticles(collision.gameObject.CompareTag("Balloon") ? collision.relativeVelocity.magnitude * 0.3f : collision.relativeVelocity.magnitude);
+
+        // Check if collision was horizontal
+        //if (Mathf.Abs(collision.relativeVelocity.x) > Mathf.Abs(collision.relativeVelocity.y))
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -324,6 +336,15 @@ public class Player : MonoBehaviour
             // {
                 // player.freezeRotation = true;
             // }
+            Debug.Log("Player on ground!");
+        }
+    }
+
+    void OnCollisionExit2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("Ground") && !flapping && player.drag > 0.1f)
+        {
+            player.drag = 0.1f;
         }
     }
 
@@ -351,7 +372,7 @@ public class Player : MonoBehaviour
         {
             if (obj.CompareTag("Boost"))
             {
-                rocketTimer = 0;
+                StartCoroutine(ExecuteRocketPropulsion());
                 Destroy(obj.transform.parent.gameObject);
                 return;
             }
@@ -491,7 +512,7 @@ public class Player : MonoBehaviour
             ParticleSystem.EmissionModule emission = psOnMovement.emission;
             emission.rateOverTime = player.velocity.magnitude * 0.002f;
             lastSpeed = player.velocity.magnitude;
-            Debug.Log("Emission rate: " + emission.rateOverTime.constant + ", new speed: " + lastSpeed);
+            //Debug.Log("Emission rate: " + emission.rateOverTime.constant + ", new speed: " + lastSpeed);
         }
     }
 
