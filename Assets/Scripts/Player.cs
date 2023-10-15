@@ -40,9 +40,9 @@ public class Player : MonoBehaviour
 
     private float rocketPropulsionTimeLength = 1.5f;
 
-    private float speedBoostTimeLength = .3f;
-    private float speedBoostTimer = .3f;
-    // private float speedBoost = 0.5f;
+    private float _speedBoostTimeLength = .3f;
+    private float _speedBoostTimer = .3f;
+    // private float _speedBoost = 0.5f;
 
     private float lastVelocityMagnitude = 0;
     private Vector2 lastVelocity;
@@ -62,7 +62,8 @@ public class Player : MonoBehaviour
     public PhysicsMaterial2D defaultPhysics;
     //public PhysicsMaterial2D bouncyPhysics;
     public PhysicsMaterial2D onSkatePhysics;
-    private float speed = 200;
+    public float _speed;
+    public float _drag;
     private bool launched = false;
 
     void Awake()
@@ -113,7 +114,7 @@ public class Player : MonoBehaviour
         {
             if (!launched)
             {
-                Launch(Vector2.right * speed);
+                Launch(Vector2.right * _speed);
             }
             else
             {
@@ -137,6 +138,24 @@ public class Player : MonoBehaviour
         //}
     }
 
+    private IEnumerator ExecuteSkateBoost(float velocity)
+    {
+        float timeElapsed = 0;
+        float lerpedValue;
+        float flapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 28 + player.velocity.x * 8 : player.velocity.x * 40;
+        flapStrength = Mathf.Min(flapStrength, 1000);
+
+        while (timeElapsed < flapTimeLength)
+        {
+            float t = timeElapsed / flapTimeLength;
+            lerpedValue = Mathf.Lerp(flapStrength, flapStrength / 2, t);
+            player.drag = Mathf.SmoothStep(3, _drag, t);
+            player.AddRelativeForce(new Vector2(player.velocity.x * 0.05f, lerpedValue), ForceMode2D.Force);
+            timeElapsed += Time.fixedDeltaTime;
+            yield return new WaitForFixedUpdate();
+        }
+    }
+
     private void ManageSkate()
     {
         if (skateBoostTimer < skateBoostLength)
@@ -156,7 +175,7 @@ public class Player : MonoBehaviour
     {
         //float force;
         //Vector2 forceVector;
-        if (speedBoostTimer < speedBoostTimeLength)
+        if (_speedBoostTimer < _speedBoostTimeLength)
         {
             //force = Mathf.Clamp(5, (200 - player.velocity.magnitude * 2) * rocketPropulsion, 300);
             //forceVector = new Vector2(force, 0);
@@ -167,7 +186,7 @@ public class Player : MonoBehaviour
             {
                 activeSkateboard.AddRelativeForce(forceVector, ForceMode2D.Force);
             }
-            speedBoostTimer += Time.deltaTime;
+            _speedBoostTimer += Time.deltaTime;
             //rocketPropulsion += Time.deltaTime;
             //Debug.Log(speedBoostTimer);
         }
@@ -190,44 +209,41 @@ public class Player : MonoBehaviour
         {
             float t = timeElapsed / flapTimeLength;
             lerpedValue = Mathf.Lerp(flapStrength, flapStrength / 2, t);
-            player.drag = Mathf.SmoothStep(3, 0.1f, t);
+            player.drag = Mathf.SmoothStep(3, _drag, t);
             player.AddRelativeForce(new Vector2(player.velocity.x * 0.05f, lerpedValue), ForceMode2D.Force);
             timeElapsed += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
-        player.drag = 0.1f;
+        player.drag = _drag;
         flapping = false;
     }
 
     private IEnumerator ExecuteRocketPropulsion()
     {
-        float timeElapsed = 0;
-        float timeAndVelocity = 0;
-        float lerpedValue;
-        int iterations = 0;
+        float _timeElapsed = 0;
+        float _timeByVelocity = 0;
+        float _force;
+        float _step;
 
-        while (timeAndVelocity < rocketPropulsionTimeLength)
+        while (_timeByVelocity < rocketPropulsionTimeLength)
         {
-            float t = timeAndVelocity / rocketPropulsionTimeLength;
-            lerpedValue = Mathf.SmoothStep(500 - player.velocity.magnitude * 4, 100, t);
-            //Debug.Log("Lerped value: " + lerpedValue);
-            player.AddRelativeForce(Vector2.right * lerpedValue, ForceMode2D.Force);
+            _step = _timeByVelocity / rocketPropulsionTimeLength;
+            _force = Mathf.SmoothStep(500 - player.velocity.magnitude * 4, 100, _step);
+            player.AddRelativeForce(Vector2.right * _force, ForceMode2D.Force);
             if (activeSkateboard)
             {
-                activeSkateboard.AddRelativeForce(Vector2.right * lerpedValue, ForceMode2D.Force);
+                activeSkateboard.AddRelativeForce(Vector2.right * _force, ForceMode2D.Force);
             }
-            timeElapsed += Time.fixedDeltaTime;
-            timeAndVelocity = timeElapsed + Mathf.InverseLerp(0, 100, player.velocity.magnitude);
-            iterations++;
+            _timeElapsed += Time.fixedDeltaTime;
+            _timeByVelocity = _timeElapsed + Mathf.InverseLerp(0, 100, player.velocity.magnitude);
             yield return new WaitForFixedUpdate();
         }
-        //Debug.Log("Iterations: " + iterations);
     }
 
     //private IEnumerator ExecuteSpeedBoostPropulsion()
     //{
         //float time = 0;
-        //while (time < speedBoostTimeLength)
+        //while (time < _speedBoostTimeLength)
         //{
 
             //time += Time.fixedDeltaTime;
@@ -285,20 +301,16 @@ public class Player : MonoBehaviour
                 springIndicator.enabled = false;
                 player.velocity = new Vector2(Mathf.Abs(collision.relativeVelocity.x), Mathf.Abs(collision.relativeVelocity.y)) * 1.5f;
             }
-            else if (player.rotation > -70 && player.rotation < 90 && player.velocity.magnitude >= 5)
+            else if (skatePickup)
             {
-                if (skatePickup)
-                {
-                    Debug.Log("Instantiating skateboard!");
-                    InstantiateSkateboard(lastVelocity.magnitude);
-                    skatePickup = false;
-                    skateIndicator.enabled = false;
-                }
-                else if (!flapping && player.drag < 1.2f)
-                {
-                    Debug.Log("Increasing drag!");
-                    player.drag = 1.2f;
-                }
+                InstantiateSkateboard((lastVelocity.magnitude + lastVelocity.x * 5) / 6);
+                skatePickup = false;
+                skateIndicator.enabled = false;
+            }
+            else if (player.velocity.magnitude >= 2 && !flapping && player.drag < 1.2f)
+            {
+                Debug.Log("Increasing drag!");
+                player.drag = 1.2f;
             }
             else
             {
@@ -306,9 +318,6 @@ public class Player : MonoBehaviour
             }
         }
         EmitParticles(collision.gameObject.CompareTag("Balloon") ? collision.relativeVelocity.magnitude * 0.3f : collision.relativeVelocity.magnitude);
-
-        // Check if collision was horizontal
-        //if (Mathf.Abs(collision.relativeVelocity.x) > Mathf.Abs(collision.relativeVelocity.y))
     }
 
     void OnCollisionStay2D(Collision2D collision)
@@ -319,19 +328,25 @@ public class Player : MonoBehaviour
             {
                 GameOver();
             }
+            else
+            {
+                player.drag = Mathf.MoveTowards(player.drag, 2.5f, 0.1f * Time.fixedDeltaTime);
+
+                Debug.Log(player.drag);
+            }
             // else if (player.sharedMaterial == skatePhysics)
             // {
                 // player.freezeRotation = true;
             // }
-            Debug.Log("Player on ground!");
+            //Debug.Log("Player on ground!");
         }
     }
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground") && !flapping && player.drag > 0.1f)
+        if (collision.gameObject.CompareTag("Ground") && !flapping && player.drag > _drag)
         {
-            player.drag = 0.1f;
+            player.drag = _drag;
         }
     }
 
@@ -340,20 +355,11 @@ public class Player : MonoBehaviour
         GameObject obj = collision.gameObject;
         if (obj.CompareTag("Skateboard"))
         {
-            // onSkateboard = true;
             player.sharedMaterial = onSkatePhysics;
             activeSkateboard = collision.gameObject.GetComponent<Rigidbody2D>();
-            // check is player or skateboard is faster
-            // add veloctity difference as force to slowest object
-            float speedDifference = Mathf.Abs(player.velocity.x - activeSkateboard.velocity.x);
-            if (player.velocity.magnitude > activeSkateboard.velocity.magnitude)
-            {
-                activeSkateboard.velocity = new Vector2(player.velocity.magnitude + speedDifference, activeSkateboard.velocity.y);
-            }
-            else
-            {
-                player.velocity = new Vector2(activeSkateboard.velocity.magnitude + speedDifference, player.velocity.y);
-            }
+            float _newVelocity = Mathf.Max(player.velocity.magnitude, activeSkateboard.velocity.magnitude) * 1.1f;
+            activeSkateboard.velocity = new Vector2(_newVelocity, activeSkateboard.velocity.y);
+            player.velocity = new Vector2(_newVelocity, player.velocity.y);
         }
         else
         {
@@ -365,7 +371,7 @@ public class Player : MonoBehaviour
             }
             else if (obj.CompareTag("Speed Boost"))
             {
-                speedBoostTimer = 0;
+                _speedBoostTimer = 0;
             }
             else if (obj.CompareTag("Skate"))
             {

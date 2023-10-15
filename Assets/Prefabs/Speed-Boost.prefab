@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 6252124722122682561}
   - component: {fileID: -8172557487398348330}
   - component: {fileID: 1365570655065885103}
-  m_Layer: 0
+  m_Layer: 11
   m_Name: Speed-Boost
   m_TagString: Speed Boost
   m_Icon: {fileID: 0}
@@ -111,10 +111,10 @@ PolygonCollider2D:
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   m_ExcludeLayers:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 3839
   m_LayerOverridePriority: 0
   m_ForceSendLayers:
     serializedVersion: 2

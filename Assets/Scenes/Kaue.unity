@@ -6481,7 +6481,7 @@ Rigidbody2D:
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
   m_Mass: 6
-  m_LinearDrag: 0.1
+  m_LinearDrag: 0.175
   m_AngularDrag: 0
   m_GravityScale: 1
   m_Material: {fileID: 6200000, guid: 8c0e8933b6adc1949ba5bc6917452c73, type: 2}
@@ -6493,7 +6493,7 @@ Rigidbody2D:
     m_Bits: 0
   m_Interpolate: 1
   m_SleepingMode: 1
-  m_CollisionDetection: 1
+  m_CollisionDetection: 0
   m_Constraints: 0
 --- !u!212 &1795070813
 SpriteRenderer:
@@ -6623,6 +6623,8 @@ MonoBehaviour:
   psOnMovement: {fileID: 1595619194}
   defaultPhysics: {fileID: 6200000, guid: 8c0e8933b6adc1949ba5bc6917452c73, type: 2}
   onSkatePhysics: {fileID: 6200000, guid: 1100114dce9cb004ea616f26839e9255, type: 2}
+  _speed: 250
+  _drag: 0.175
 --- !u!198 &1795070817
 ParticleSystem:
   m_ObjectHideFlags: 0

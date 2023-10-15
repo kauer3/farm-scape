@@ -149,8 +149,8 @@ GameObject:
   - component: {fileID: 935587506}
   - component: {fileID: -6466183980237566612}
   - component: {fileID: 6066169942287235459}
-  - component: {fileID: 4475182761864062593}
   - component: {fileID: 1344956608561782753}
+  - component: {fileID: 6450408928210133347}
   m_Layer: 3
   m_Name: Skateboard
   m_TagString: Skateboard
@@ -385,19 +385,6 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 2.14, y: 0.11}
   m_EdgeRadius: 0
---- !u!114 &4475182761864062593
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7301231475686685852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: bb2b50f1658b3c04084889fef372a602, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  skateRb: {fileID: 7301231475686685853}
 --- !u!70 &1344956608561782753
 CapsuleCollider2D:
   m_ObjectHideFlags: 0
@@ -433,3 +420,16 @@ CapsuleCollider2D:
   m_Offset: {x: 0, y: -0.03}
   m_Size: {x: 1.77, y: 0.15}
   m_Direction: 1
+--- !u!114 &6450408928210133347
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7301231475686685852}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f934ed07f2c28b747bfa0a83d881f313, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  rb: {fileID: 7301231475686685853}
