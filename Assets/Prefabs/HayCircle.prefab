@@ -140,11 +140,11 @@ Rigidbody2D:
   m_Simulated: 1
   m_UseFullKinematicContacts: 0
   m_UseAutoMass: 0
-  m_Mass: 1
-  m_LinearDrag: 0.5
+  m_Mass: 0.8
+  m_LinearDrag: 0.8
   m_AngularDrag: 0
   m_GravityScale: 1
-  m_Material: {fileID: 0}
+  m_Material: {fileID: 6200000, guid: 11ff2900be8e30c45ab15074a7ed4aac, type: 2}
   m_IncludeLayers:
     serializedVersion: 2
     m_Bits: 0
@@ -167,7 +167,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b9cbed03c9e2bd48a47d5b834e2b905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 120
+  health: 100
   playerForce: 32
   force: 50
   particlesOnCollision: 1
