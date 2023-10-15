@@ -6,6 +6,7 @@ using UnityEditor;
 using UnityEditor.UI;
 using UnityEngine;
 using Cinemachine;
+using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
@@ -15,12 +16,12 @@ public class Player : MonoBehaviour
 
     public TMP_Text distanceIndicator;
     public TMP_Text altitudeIndicator;
+    public Image skateIndicator;
+    public Image springIndicator;
     private Vector2 position;
 
     // private bool onSkateboard = false;
     private float flapTimeLength = 0.05f;
-    private float flapTimer = 0.05f;
-    private Vector2 flapDirection;
     private bool flapping = false;
 
     private float skateBoostLength = 1;
@@ -43,7 +44,8 @@ public class Player : MonoBehaviour
     private float speedBoostTimer = .3f;
     // private float speedBoost = 0.5f;
 
-    private float lastSpeed = 0;
+    private float lastVelocityMagnitude = 0;
+    private Vector2 lastVelocity;
 
     public Rigidbody2D player;
     private Rigidbody2D activeSkateboard = null;
@@ -58,7 +60,7 @@ public class Player : MonoBehaviour
     private ParticleSystem.MainModule psOnMovementMain;
 
     public PhysicsMaterial2D defaultPhysics;
-    public PhysicsMaterial2D bouncyPhysics;
+    //public PhysicsMaterial2D bouncyPhysics;
     public PhysicsMaterial2D onSkatePhysics;
     private float speed = 200;
     private bool launched = false;
@@ -90,12 +92,15 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        //ManageFlight();
         ManageSkate();
         ManageSpeedBoost();
-        //ManageEggPropulsion();
         RotateTorwardsMovement();
         ManageParticlesOnMove();
+
+        if ((bouncyPickup || skatePickup) && player.position.y < -3.5)
+        {
+            lastVelocity = player.velocity;
+        }
 
         // Create linear drag only on the horizonta axis
         //Vector2 drag = new Vector2(player.velocity.x * -0.1f, 0);
@@ -112,13 +117,8 @@ public class Player : MonoBehaviour
             }
             else
             {
-                //float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 17.5f + player.velocity.x * 5 : player.velocity.x * 25;
-                //float clippedFlapStrength = Mathf.Min(rawFlapStrength, 500f);
-                //flapDirection = Vector2.up * clippedFlapStrength;
-                //flapTimer = 0f;
                 StopCoroutine(ExecuteFlap());
                 StartCoroutine(ExecuteFlap());
-                // Debug.Log("Flap direction: " + flapDirection);
             }
         }
         //else if (Input.GetKey(KeyCode.LeftShift))
@@ -135,15 +135,6 @@ public class Player : MonoBehaviour
             //}
             //Debug.Log("Going down");
         //}
-    }
-
-    private void ManageFlight()
-    {
-        if (flapTimer < flapTimeLength)
-        {
-            player.AddRelativeForce(flapDirection, ForceMode2D.Force);
-            flapTimer += Time.deltaTime;
-        }
     }
 
     private void ManageSkate()
@@ -188,21 +179,18 @@ public class Player : MonoBehaviour
 
     private IEnumerator ExecuteFlap()
     {
+        flapping = true;
         float timeElapsed = 0;
         float lerpedValue;
-        float horizontalVelocity = Mathf.InverseLerp(0, player.velocity.magnitude, player.velocity.x); 
-        float rawFlapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 28 + player.velocity.x * 8 : player.velocity.x * 40;
-        float clippedFlapStrength = Mathf.Min(rawFlapStrength, 1000);
-        //Debug.Log("Horizontal velocity: " + horizontalVelocity);
-        Debug.Log("Clipped flap strength: " + clippedFlapStrength);
+        float flapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 28 + player.velocity.x * 8 : player.velocity.x * 40;
+        flapStrength = Mathf.Min(flapStrength, 1000);
 
-        flapping = true;
-        player.drag = 2;
+        player.drag = 3;
         while (timeElapsed < flapTimeLength)
         {
             float t = timeElapsed / flapTimeLength;
-            lerpedValue = Mathf.Lerp(clippedFlapStrength, clippedFlapStrength / 2, t);
-            player.drag = Mathf.SmoothStep(2, 0.1f, t);
+            lerpedValue = Mathf.Lerp(flapStrength, flapStrength / 2, t);
+            player.drag = Mathf.SmoothStep(3, 0.1f, t);
             player.AddRelativeForce(new Vector2(player.velocity.x * 0.05f, lerpedValue), ForceMode2D.Force);
             timeElapsed += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
@@ -266,7 +254,7 @@ public class Player : MonoBehaviour
 
     private void RotateTorwardsMovement()
     {
-        if (activeSkateboard == null && player.velocity.magnitude > 0 && player.position.y > -3.91)
+        if (activeSkateboard == null && player.velocity.magnitude > 0)
         {
             float angle = Mathf.Atan2(player.velocity.y, player.velocity.x) * Mathf.Rad2Deg;
             player.MoveRotation(angle + 5 * Time.fixedDeltaTime);
@@ -294,23 +282,22 @@ public class Player : MonoBehaviour
             if (bouncyPickup)
             {
                 bouncyPickup = false;
-                player.sharedMaterial = defaultPhysics;
-                playerSprite.color = new Color(1, 1, 1, 1);
-                //Vector2 force = Vector2.right * player.velocity.x * 20;
-                //player.AddForce(force, ForceMode2D.Impulse);
-                // Check velocity after bounce
+                springIndicator.enabled = false;
+                player.velocity = new Vector2(Mathf.Abs(collision.relativeVelocity.x), Mathf.Abs(collision.relativeVelocity.y)) * 1.5f;
             }
-            else if (player.rotation > -55 && player.rotation < 90 && player.velocity.magnitude >= 5)
+            else if (player.rotation > -70 && player.rotation < 90 && player.velocity.magnitude >= 5)
             {
-                Debug.Log("Player touched ground!");
                 if (skatePickup)
                 {
-                    InstantiateSkateboard(player.velocity.magnitude);
+                    Debug.Log("Instantiating skateboard!");
+                    InstantiateSkateboard(lastVelocity.magnitude);
                     skatePickup = false;
+                    skateIndicator.enabled = false;
                 }
-                else if (!flapping && player.drag < 1)
+                else if (!flapping && player.drag < 1.2f)
                 {
-                    player.drag = 1;
+                    Debug.Log("Increasing drag!");
+                    player.drag = 1.2f;
                 }
             }
             else
@@ -383,12 +370,13 @@ public class Player : MonoBehaviour
             else if (obj.CompareTag("Skate"))
             {
                 skatePickup = true;
+                skateIndicator.enabled = true;
             }
             else if (obj.CompareTag("Bouncy"))
             {
                 bouncyPickup = true;
-                player.sharedMaterial = bouncyPhysics;
-                playerSprite.color = new Color(0.6705883f, 0.254902f, 0.7372549f, 0.75f);
+                springIndicator.enabled = true;
+                //player.sharedMaterial = bouncyPhysics;
             }
             else if (obj.CompareTag("Egg Pickup"))
             {
@@ -422,15 +410,9 @@ public class Player : MonoBehaviour
             {
                 player.velocity = new Vector2(collisionRb.velocity.magnitude, player.velocity.y);
             }
-            if (bouncyPickup)
-            {
-                player.sharedMaterial = bouncyPhysics;
-                playerSprite.color = new Color(0.6705883f, 0.254902f, 0.7372549f, 0.75f);
-            }
             else
             {
                 player.sharedMaterial = defaultPhysics;
-                playerSprite.color = new Color(1, 1, 1, 1);
             }
             // player.freezeRotation = false;
             // Debug.Log("Player left skateboard!");
@@ -454,7 +436,7 @@ public class Player : MonoBehaviour
 
     void InstantiateSkateboard(float velocity)
     {
-        player.velocity = new Vector2(velocity, 3f);
+        player.velocity = new Vector2(velocity + 3, 3);
         Vector2 skatePos = new Vector2(player.position.x, -4.46f);
         Vector2 skateVel = new Vector2(velocity, 0);
         GameObject newSkateboard = Instantiate(skateboard, skatePos, Quaternion.identity);
@@ -507,11 +489,11 @@ public class Player : MonoBehaviour
 
     private void ManageParticlesOnMove()
     {
-        if (player.velocity.magnitude > lastSpeed + 3 || player.velocity.magnitude < lastSpeed - 3)
+        if (player.velocity.magnitude > lastVelocityMagnitude + 3 || player.velocity.magnitude < lastVelocityMagnitude - 3)
         {
             ParticleSystem.EmissionModule emission = psOnMovement.emission;
             emission.rateOverTime = player.velocity.magnitude * 0.002f;
-            lastSpeed = player.velocity.magnitude;
+            lastVelocityMagnitude = player.velocity.magnitude;
             //Debug.Log("Emission rate: " + emission.rateOverTime.constant + ", new speed: " + lastSpeed);
         }
     }
