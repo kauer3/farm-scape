@@ -6610,19 +6610,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 70bf69a310ad0cb46894c5e5b1af146e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  vcam: {fileID: 1858224378}
-  distanceIndicator: {fileID: 1784345025}
-  altitudeIndicator: {fileID: 1872518266}
-  skateIndicator: {fileID: 860701410}
-  springIndicator: {fileID: 862019863}
-  player: {fileID: 1795070812}
-  playerSprite: {fileID: 1795070813}
-  skateboard: {fileID: 7301231475686685852, guid: fc43d1c5948272644a0017eab585cdf8, type: 3}
-  egg: {fileID: 8891235687042673059, guid: 3411e6f1fcdc4a24d849cd7205b6a6a7, type: 3}
-  psOnCollision: {fileID: 1795070817}
-  psOnMovement: {fileID: 1595619194}
-  defaultPhysics: {fileID: 6200000, guid: 8c0e8933b6adc1949ba5bc6917452c73, type: 2}
-  onSkatePhysics: {fileID: 6200000, guid: 1100114dce9cb004ea616f26839e9255, type: 2}
+  _vcam: {fileID: 1858224378}
+  _distanceIndicator: {fileID: 1784345025}
+  _altituteIndicator: {fileID: 1872518266}
+  _skateIndicator: {fileID: 860701410}
+  _springIndicator: {fileID: 862019863}
+  _player: {fileID: 1795070812}
+  _skateboard: {fileID: 7301231475686685852, guid: fc43d1c5948272644a0017eab585cdf8, type: 3}
+  _egg: {fileID: 8891235687042673059, guid: 3411e6f1fcdc4a24d849cd7205b6a6a7, type: 3}
+  _psOnCollision: {fileID: 1795070817}
+  _psOnMovement: {fileID: 1595619194}
+  _defaultPhysics: {fileID: 6200000, guid: 8c0e8933b6adc1949ba5bc6917452c73, type: 2}
+  _onSkatePhysics: {fileID: 6200000, guid: 3b07f0985b7a4b04f8042599c4e24b51, type: 2}
   _speed: 250
   _drag: 0.175
 --- !u!198 &1795070817

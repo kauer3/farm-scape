@@ -10,80 +10,73 @@ using UnityEngine.UI;
 
 public class Player : MonoBehaviour
 {
-    public CinemachineVirtualCamera vcam;
-    private CinemachineFramingTransposer composer;
-    private CinemachineBasicMultiChannelPerlin noise;
+    public CinemachineVirtualCamera _vcam;
+    private CinemachineFramingTransposer _composer;
+    private CinemachineBasicMultiChannelPerlin _noise;
 
-    public TMP_Text distanceIndicator;
-    public TMP_Text altitudeIndicator;
-    public Image skateIndicator;
-    public Image springIndicator;
-    private Vector2 position;
+    public TMP_Text _distanceIndicator;
+    public TMP_Text _altituteIndicator;
+    public Image _skateIndicator;
+    public Image _springIndicator;
+    private Vector2 _lastPosition;
 
     // private bool onSkateboard = false;
-    private float flapTimeLength = 0.05f;
-    private bool flapping = false;
+    private float _flapTimeLength = 0.05f;
+    private bool _flapping = false;
 
-    private float skateBoostLength = 1;
-    private float skateBoostTimer = 1;
-    private Vector2 skateBoost;
+    private float _skateBoostLength = 1;
 
-    private bool skatePickup = false;
-    private bool bouncyPickup = false;
+    private bool _skatePickup = false;
+    private bool _bouncyPickup = false;
 
-    private bool executingEggPropulsion = false;
-    //private int eggCounter;
-    //private float eggTimer = 0f;
-    private float eggExpelDelay = .35f;
-    //private float eggPropulsionTimer = 1.25f;
-    //private float eggPropulsionTimeLength = 1.25f;
+    private bool _executingEggPropulsion = false;
+    private float _eggExpelDelay = .35f;
 
-    private float rocketPropulsionTimeLength = 1.5f;
+    private float _rocketPropulsionTimeLength = 1.5f;
 
     private float _speedBoostTimeLength = .3f;
     private float _speedBoostTimer = .3f;
     // private float _speedBoost = 0.5f;
 
-    private float lastVelocityMagnitude = 0;
-    private Vector2 lastVelocity;
+    private float _lastVelocityMagnitude = 0;
+    private Vector2 _lastVelocity;
 
-    public Rigidbody2D player;
-    private Rigidbody2D activeSkateboard = null;
-    private Rigidbody2D instantiatedSkateboard = null;
-    public SpriteRenderer playerSprite;
-    public GameObject skateboard;
-    public GameObject egg;
+    public Rigidbody2D _player;
+    private Rigidbody2D _activeSkateboard = null;
+    private Rigidbody2D _instantiatedSkateboard = null;
+    public GameObject _skateboard;
+    public GameObject _egg;
 
-    [SerializeField] ParticleSystem psOnCollision;
-    [SerializeField] ParticleSystem psOnMovement;
-    private ParticleSystem.MainModule psOnCollisionMain;
-    private ParticleSystem.MainModule psOnMovementMain;
+    public ParticleSystem _psOnCollision;
+    public ParticleSystem _psOnMovement;
+    private ParticleSystem.MainModule _psOnCollisionMain;
+    private ParticleSystem.MainModule _psOnMovementMain;
 
-    public PhysicsMaterial2D defaultPhysics;
+    public PhysicsMaterial2D _defaultPhysics;
     //public PhysicsMaterial2D bouncyPhysics;
-    public PhysicsMaterial2D onSkatePhysics;
+    public PhysicsMaterial2D _onSkatePhysics;
     public float _speed;
     public float _drag;
-    private bool launched = false;
+    private bool _launched = false;
 
     void Awake()
     {
-        composer = vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
-        noise = vcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
-        psOnCollisionMain = psOnCollision.main;
-        psOnMovementMain = psOnMovement.main;
+        _composer = _vcam.GetCinemachineComponent<CinemachineFramingTransposer>();
+        _noise = _vcam.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>();
+        _psOnCollisionMain = _psOnCollision.main;
+        _psOnMovementMain = _psOnMovement.main;
     }
 
     void Update()
     {
         ManageFlightInput();
         UpdatePositionIndicator();
-        //ManageCameraShake();
+        ManageCameraShake();
         
-        // Zoom out camera when player is moving fast
-        //if (player.velocity.magnitude > 20)
+        // Zoom out camera when _player is moving fast
+        //if (_player.velocity.magnitude > 20)
         //{
-            //composer.m_CameraDistance = Mathf.Clamp(player.velocity.magnitude / 10, 10, 20);
+            //composer.m_CameraDistance = Mathf.Clamp(_player.velocity.magnitude / 10, 10, 20);
         //}
         //else if (composer.m_CameraDistance != 27)
         //{
@@ -93,26 +86,26 @@ public class Player : MonoBehaviour
 
     void FixedUpdate()
     {
-        ManageSkate();
+        //ManageSkate();
         ManageSpeedBoost();
         RotateTorwardsMovement();
         ManageParticlesOnMove();
 
-        if ((bouncyPickup || skatePickup) && player.position.y < -3.5)
+        if ((_bouncyPickup || _skatePickup) && _player.position.y < -3.5)
         {
-            lastVelocity = player.velocity;
+            _lastVelocity = _player.velocity;
         }
 
         // Create linear drag only on the horizonta axis
-        //Vector2 drag = new Vector2(player.velocity.x * -0.1f, 0);
-        //player.AddForce(drag, ForceMode2D.Force);
+        //Vector2 drag = new Vector2(_player.velocity.x * -0.1f, 0);
+        //_player.AddForce(drag, ForceMode2D.Force);
     }
 
     private void ManageFlightInput()
     {
         if (Input.GetKeyDown(KeyCode.Space))
         {
-            if (!launched)
+            if (!_launched)
             {
                 Launch(Vector2.right * _speed);
             }
@@ -126,48 +119,47 @@ public class Player : MonoBehaviour
         //{
             //flapTimer = flapTimeLength;
             //Vector2 direction = new Vector2(0, -50) * Time.fixedDeltaTime;
-            //if (player.velocity.y < 0)
+            //if (_player.velocity.y < 0)
             //{
-                //player.AddForce(direction, ForceMode2D.Force);
+                //_player.AddForce(direction, ForceMode2D.Force);
             //}
             //else
             //{
-                //player.AddRelativeForce(direction, ForceMode2D.Force);
+                //_player.AddRelativeForce(direction, ForceMode2D.Force);
             //}
             //Debug.Log("Going down");
         //}
     }
 
-    private IEnumerator ExecuteSkateBoost(float velocity)
+    private IEnumerator ExecuteSkateBoost(float velocity, Rigidbody2D skateboardRb)
     {
-        float timeElapsed = 0;
-        float lerpedValue;
-        float flapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 28 + player.velocity.x * 8 : player.velocity.x * 40;
-        flapStrength = Mathf.Min(flapStrength, 1000);
+        float _timeElapsed = 0;
+        float _horizontalForce;
+        float _verticalForce = 0;
+        bool _reachedVerticalPeak = false;
 
-        while (timeElapsed < flapTimeLength)
+        while (_timeElapsed < _skateBoostLength)
         {
-            float t = timeElapsed / flapTimeLength;
-            lerpedValue = Mathf.Lerp(flapStrength, flapStrength / 2, t);
-            player.drag = Mathf.SmoothStep(3, _drag, t);
-            player.AddRelativeForce(new Vector2(player.velocity.x * 0.05f, lerpedValue), ForceMode2D.Force);
-            timeElapsed += Time.fixedDeltaTime;
+            float t = _timeElapsed / _skateBoostLength;
+            _horizontalForce = Mathf.Lerp(0, velocity, t);
+
+            if (!_reachedVerticalPeak)
+            {
+                if (_player.position.y < -3.5f)
+                {
+                    _verticalForce = Mathf.InverseLerp(-3.3f, -3.85f, _player.position.y) * velocity * 6;
+                }
+                else
+                {
+                    _verticalForce = 0;
+                    _reachedVerticalPeak = true;
+                }
+            }
+
+            _player.AddRelativeForce(new Vector2(_horizontalForce, _verticalForce), ForceMode2D.Force);
+            skateboardRb.AddRelativeForce(Vector2.right * _horizontalForce * 0.4f, ForceMode2D.Force);
+            _timeElapsed += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
-        }
-    }
-
-    private void ManageSkate()
-    {
-        if (skateBoostTimer < skateBoostLength)
-        {
-            Vector2 boost = skateBoost * (skateBoostLength - skateBoostTimer);
-            player.AddForce(boost * 1.3f, ForceMode2D.Force);
-            instantiatedSkateboard.AddForce(boost, ForceMode2D.Force);
-            skateBoostTimer += Time.deltaTime;
-        }
-        else if (instantiatedSkateboard)
-        {
-            instantiatedSkateboard = null;
         }
     }
 
@@ -177,14 +169,14 @@ public class Player : MonoBehaviour
         //Vector2 forceVector;
         if (_speedBoostTimer < _speedBoostTimeLength)
         {
-            //force = Mathf.Clamp(5, (200 - player.velocity.magnitude * 2) * rocketPropulsion, 300);
+            //force = Mathf.Clamp(5, (200 - _player.velocity.magnitude * 2) * rocketPropulsion, 300);
             //forceVector = new Vector2(force, 0);
             // Debug.Log("Force: " + force);
             Vector2 forceVector = Vector2.right * 500;
-            player.AddRelativeForce(forceVector, ForceMode2D.Force);
-            if (activeSkateboard)
+            _player.AddRelativeForce(forceVector, ForceMode2D.Force);
+            if (_activeSkateboard)
             {
-                activeSkateboard.AddRelativeForce(forceVector, ForceMode2D.Force);
+                _activeSkateboard.AddRelativeForce(forceVector * 0.4f, ForceMode2D.Force);
             }
             _speedBoostTimer += Time.deltaTime;
             //rocketPropulsion += Time.deltaTime;
@@ -198,24 +190,24 @@ public class Player : MonoBehaviour
 
     private IEnumerator ExecuteFlap()
     {
-        flapping = true;
-        float timeElapsed = 0;
-        float lerpedValue;
-        float flapStrength = player.velocity.y < 0 ? player.velocity.magnitude * 28 + player.velocity.x * 8 : player.velocity.x * 40;
-        flapStrength = Mathf.Min(flapStrength, 1000);
+        _flapping = true;
+        float _timeElapsed = 0;
+        float _lerpedValue;
+        float _flapStrength = _player.velocity.y < 0 ? _player.velocity.magnitude * 28 + _player.velocity.x * 8 : _player.velocity.x * 40;
+        _flapStrength = Mathf.Min(_flapStrength, 1000);
 
-        player.drag = 3;
-        while (timeElapsed < flapTimeLength)
+        _player.drag = 3;
+        while (_timeElapsed < _flapTimeLength)
         {
-            float t = timeElapsed / flapTimeLength;
-            lerpedValue = Mathf.Lerp(flapStrength, flapStrength / 2, t);
-            player.drag = Mathf.SmoothStep(3, _drag, t);
-            player.AddRelativeForce(new Vector2(player.velocity.x * 0.05f, lerpedValue), ForceMode2D.Force);
-            timeElapsed += Time.fixedDeltaTime;
+            float t = _timeElapsed / _flapTimeLength;
+            _lerpedValue = Mathf.Lerp(_flapStrength, _flapStrength / 2, t);
+            _player.drag = Mathf.SmoothStep(3, _drag, t);
+            _player.AddRelativeForce(new Vector2(_player.velocity.x * 0.05f, _lerpedValue), ForceMode2D.Force);
+            _timeElapsed += Time.fixedDeltaTime;
             yield return new WaitForFixedUpdate();
         }
-        player.drag = _drag;
-        flapping = false;
+        _player.drag = _drag;
+        _flapping = false;
     }
 
     private IEnumerator ExecuteRocketPropulsion()
@@ -225,17 +217,17 @@ public class Player : MonoBehaviour
         float _force;
         float _step;
 
-        while (_timeByVelocity < rocketPropulsionTimeLength)
+        while (_timeByVelocity < _rocketPropulsionTimeLength)
         {
-            _step = _timeByVelocity / rocketPropulsionTimeLength;
-            _force = Mathf.SmoothStep(500 - player.velocity.magnitude * 4, 100, _step);
-            player.AddRelativeForce(Vector2.right * _force, ForceMode2D.Force);
-            if (activeSkateboard)
+            _step = _timeByVelocity / _rocketPropulsionTimeLength;
+            _force = Mathf.SmoothStep(500 - _player.velocity.magnitude * 4, 100, _step);
+            _player.AddRelativeForce(Vector2.right * _force, ForceMode2D.Force);
+            if (_activeSkateboard)
             {
-                activeSkateboard.AddRelativeForce(Vector2.right * _force, ForceMode2D.Force);
+                _activeSkateboard.AddRelativeForce(Vector2.right * _force * 0.4f, ForceMode2D.Force);
             }
             _timeElapsed += Time.fixedDeltaTime;
-            _timeByVelocity = _timeElapsed + Mathf.InverseLerp(0, 100, player.velocity.magnitude);
+            _timeByVelocity = _timeElapsed + Mathf.InverseLerp(0, 100, _player.velocity.magnitude);
             yield return new WaitForFixedUpdate();
         }
     }
@@ -253,64 +245,67 @@ public class Player : MonoBehaviour
 
     private IEnumerator ExecuteEggPropulsion()
     {
-        while (executingEggPropulsion)
+        while (_executingEggPropulsion)
         {
             yield return new WaitForSeconds(0.1f);
         }
 
-        executingEggPropulsion = true;
+        _executingEggPropulsion = true;
         for (int i = 0; i < 4; i++)
         {
-            player.AddForce(Vector2.right * 35, ForceMode2D.Impulse);
+            _player.AddForce(Vector2.right * 35, ForceMode2D.Impulse);
             ExpelEgg();
-            yield return new WaitForSeconds(eggExpelDelay);
+            yield return new WaitForSeconds(_eggExpelDelay);
         }
-        executingEggPropulsion = false;
+        _executingEggPropulsion = false;
     }
 
     private void RotateTorwardsMovement()
     {
-        if (activeSkateboard == null && player.velocity.magnitude > 0)
+        if (_activeSkateboard == null && _player.velocity.magnitude > 0)
         {
-            float angle = Mathf.Atan2(player.velocity.y, player.velocity.x) * Mathf.Rad2Deg;
-            player.MoveRotation(angle + 5 * Time.fixedDeltaTime);
+            float angle = Mathf.Atan2(_player.velocity.y, _player.velocity.x) * Mathf.Rad2Deg;
+            _player.MoveRotation(angle + 5 * Time.fixedDeltaTime);
         }
     }
 
     private void AnimateRotateForward(float angle, float incrementSpeed)
     {
-        player.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, angle), incrementSpeed));
+        _player.MoveRotation(Quaternion.RotateTowards(transform.rotation, Quaternion.Euler(0, 0, angle), incrementSpeed));
     }
 
     public void Launch(Vector2 direction)
     {
-        player.bodyType = RigidbodyType2D.Dynamic;
-        player.AddRelativeForce(direction, ForceMode2D.Impulse);
+        _player.bodyType = RigidbodyType2D.Dynamic;
+        _player.AddRelativeForce(direction, ForceMode2D.Impulse);
         //EmitParticles(100);
-        psOnMovement.Play();
-        launched = true;
+        _psOnMovement.Play();
+        _launched = true;
     }
 
     void OnCollisionEnter2D(Collision2D collision)
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            if (bouncyPickup)
+            if (_bouncyPickup)
             {
-                bouncyPickup = false;
-                springIndicator.enabled = false;
-                player.velocity = new Vector2(Mathf.Abs(collision.relativeVelocity.x), Mathf.Abs(collision.relativeVelocity.y)) * 1.5f;
+                _bouncyPickup = false;
+                _springIndicator.enabled = false;
+                _player.velocity = new Vector2(Mathf.Abs(collision.relativeVelocity.x), Mathf.Abs(collision.relativeVelocity.y)) * 1.5f;
             }
-            else if (skatePickup)
+            else if (_skatePickup)
             {
-                InstantiateSkateboard((lastVelocity.magnitude + lastVelocity.x * 5) / 6);
-                skatePickup = false;
-                skateIndicator.enabled = false;
+                InstantiateSkateboard((_lastVelocity.magnitude + _lastVelocity.x * 5) / 6);
+                _skatePickup = false;
+                _skateIndicator.enabled = false;
             }
-            else if (player.velocity.magnitude >= 2 && !flapping && player.drag < 1.2f)
+            else if (_player.velocity.magnitude > 4)
             {
-                Debug.Log("Increasing drag!");
-                player.drag = 1.2f;
+                PreventShortBouncing();
+                if (!_flapping && _player.drag < 1.2f)
+                {
+                    _player.drag = 1.2f;
+                }
             }
             else
             {
@@ -324,19 +319,19 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Ground"))
         {
-            if (player.velocity.magnitude < 0.1)
+            if (_player.velocity.magnitude < 0.1)
             {
                 GameOver();
             }
             else
             {
-                player.drag = Mathf.MoveTowards(player.drag, 2.5f, 0.1f * Time.fixedDeltaTime);
-
-                Debug.Log(player.drag);
+                _player.drag = Mathf.MoveTowards(_player.drag, 2.5f, 0.1f * Time.fixedDeltaTime);
+                //Debug.Log(_player.drag);
+                PreventShortBouncing();
             }
-            // else if (player.sharedMaterial == skatePhysics)
+            // else if (_player.sharedMaterial == skatePhysics)
             // {
-                // player.freezeRotation = true;
+                // _player.freezeRotation = true;
             // }
             //Debug.Log("Player on ground!");
         }
@@ -344,9 +339,9 @@ public class Player : MonoBehaviour
 
     void OnCollisionExit2D(Collision2D collision)
     {
-        if (collision.gameObject.CompareTag("Ground") && !flapping && player.drag > _drag)
+        if (collision.gameObject.CompareTag("Ground") && !_flapping && _player.drag > _drag)
         {
-            player.drag = _drag;
+            _player.drag = _drag;
         }
     }
 
@@ -355,11 +350,11 @@ public class Player : MonoBehaviour
         GameObject obj = collision.gameObject;
         if (obj.CompareTag("Skateboard"))
         {
-            player.sharedMaterial = onSkatePhysics;
-            activeSkateboard = collision.gameObject.GetComponent<Rigidbody2D>();
-            float _newVelocity = Mathf.Max(player.velocity.magnitude, activeSkateboard.velocity.magnitude) * 1.1f;
-            activeSkateboard.velocity = new Vector2(_newVelocity, activeSkateboard.velocity.y);
-            player.velocity = new Vector2(_newVelocity, player.velocity.y);
+            _player.sharedMaterial = _onSkatePhysics;
+            _activeSkateboard = collision.gameObject.GetComponent<Rigidbody2D>();
+            float _newVelocity = Mathf.Max(_player.velocity.magnitude, _activeSkateboard.velocity.magnitude) * 1.1f;
+            _activeSkateboard.velocity = new Vector2(_newVelocity, _activeSkateboard.velocity.y);
+            _player.velocity = new Vector2(_newVelocity, _player.velocity.y);
         }
         else
         {
@@ -375,14 +370,14 @@ public class Player : MonoBehaviour
             }
             else if (obj.CompareTag("Skate"))
             {
-                skatePickup = true;
-                skateIndicator.enabled = true;
+                _skatePickup = true;
+                _skateIndicator.enabled = true;
             }
             else if (obj.CompareTag("Bouncy"))
             {
-                bouncyPickup = true;
-                springIndicator.enabled = true;
-                //player.sharedMaterial = bouncyPhysics;
+                _bouncyPickup = true;
+                _springIndicator.enabled = true;
+                //_player.sharedMaterial = bouncyPhysics;
             }
             else if (obj.CompareTag("Egg Pickup"))
             {
@@ -402,25 +397,25 @@ public class Player : MonoBehaviour
         if (collision.gameObject.CompareTag("Skateboard"))
         {
             // onSkateboard = false;
-            // if (activeSkateboard)
+            // if (_activeSkateboard)
             // {
-            activeSkateboard = null;
+            _activeSkateboard = null;
             // }
-            // if (instantiatedSkateboard)
+            // if (_instantiatedSkateboard)
             // {
-            // instantiatedSkateboard = null;
+            // _instantiatedSkateboard = null;
             // }
             //check collision gameobject's velocity
             Rigidbody2D collisionRb = collision.gameObject.GetComponent<Rigidbody2D>();
-            if (collisionRb.velocity.x > player.velocity.x)
+            if (collisionRb.velocity.x > _player.velocity.x)
             {
-                player.velocity = new Vector2(collisionRb.velocity.magnitude, player.velocity.y);
+                _player.velocity = new Vector2(collisionRb.velocity.magnitude, _player.velocity.y);
             }
             else
             {
-                player.sharedMaterial = defaultPhysics;
+                _player.sharedMaterial = _defaultPhysics;
             }
-            // player.freezeRotation = false;
+            // _player.freezeRotation = false;
             // Debug.Log("Player left skateboard!");
         }
     }
@@ -429,27 +424,35 @@ public class Player : MonoBehaviour
     {
         if (collision.gameObject.CompareTag("Skateboard"))
         {
-            if (player.velocity.magnitude < 0.1)
+            if (_player.velocity.magnitude < 0.1)
             {
                 GameOver();
             }
-            else if (player.rotation != 0)
+            else if (_player.rotation != 0)
             {
                 AnimateRotateForward(0, 150 * Time.fixedDeltaTime);
             }
         }
     }
 
+    void PreventShortBouncing()
+    {
+        //Debug.Log("Velocity Y: " + _player.velocity.y);
+        if (Mathf.Abs(_player.velocity.y) < 5)
+        {
+            _player.velocity = new Vector2(_player.velocity.x, 0);
+        }
+    }
+
     void InstantiateSkateboard(float velocity)
     {
-        player.velocity = new Vector2(velocity + 3, 3);
-        Vector2 skatePos = new Vector2(player.position.x, -4.46f);
+        _player.velocity = new Vector2(velocity, 0);
+        Vector2 skatePos = new Vector2(_player.position.x, -4.46f);
         Vector2 skateVel = new Vector2(velocity, 0);
-        GameObject newSkateboard = Instantiate(skateboard, skatePos, Quaternion.identity);
-        instantiatedSkateboard = newSkateboard.GetComponent<Rigidbody2D>();
-        instantiatedSkateboard.velocity = skateVel;
-        skateBoostTimer = 0;
-        skateBoost = new Vector2((velocity + 100) * 0.35f, 0);
+        GameObject newSkateboard = Instantiate(_skateboard, skatePos, Quaternion.identity);
+        _instantiatedSkateboard = newSkateboard.GetComponent<Rigidbody2D>();
+        _instantiatedSkateboard.velocity = skateVel;
+        StartCoroutine(ExecuteSkateBoost((velocity + 100) * 0.35f, _instantiatedSkateboard));
     }
 
     private void ExpelEgg()
@@ -462,44 +465,44 @@ public class Player : MonoBehaviour
         // float yComponent = Mathf.Sin(angle) * force;
         // Vector2 forceApplied = new Vector2(xComponent, yComponent);
 
-        // player.AddForce(Vector2.up * force, ForceMode2D.Force);
+        // _player.AddForce(Vector2.up * force, ForceMode2D.Force);
 
-        GameObject expelledEgg = Instantiate(egg, transform.position + position, transform.rotation * Quaternion.Euler(0, 0, 90));
+        GameObject expelledEgg = Instantiate(_egg, transform.position + position, transform.rotation * Quaternion.Euler(0, 0, 90));
         // Debug.Log(expelledEgg.transform.rotation);
         expelledEgg.GetComponent<Rigidbody2D>().AddRelativeForce(Vector2.up * 4f, ForceMode2D.Impulse);
     }
 
     void ManageCameraShake()
     {
-        // Debug.Log("Vertical velocity: " + player.velocity.y + ", Horizontal velocity: " + player.velocity.x + ", Magnitude: " + player.velocity.magnitude);
-        if (player.velocity.magnitude > 20)
+        // Debug.Log("Vertical velocity: " + _player.velocity.y + ", Horizontal velocity: " + _player.velocity.x + ", Magnitude: " + _player.velocity.magnitude);
+        if (_player.velocity.magnitude > 20)
         {
-            float noiseIntensity = Mathf.Clamp(player.velocity.magnitude / 20 - 1, 0, 2.5f);
-            if (Mathf.Abs(noise.m_AmplitudeGain - noiseIntensity) > 0.1)
+            float noiseIntensity = Mathf.Clamp(_player.velocity.magnitude / 20 - 1, 0, 2.5f);
+            if (Mathf.Abs(_noise.m_AmplitudeGain - noiseIntensity) > 0.1)
             {
-                noise.m_AmplitudeGain = noiseIntensity;
+                _noise.m_AmplitudeGain = noiseIntensity;
                 // Debug.Log("Noise Intensity: " + noiseIntensity);
             }
         }
-        else if (noise.m_AmplitudeGain > 0)
+        else if (_noise.m_AmplitudeGain > 0)
         {
-            noise.m_AmplitudeGain = 0;
+            _noise.m_AmplitudeGain = 0;
         }
     }
 
     private void EmitParticles(float force)
     {
-        psOnCollisionMain.startSpeedMultiplier = force;
-        psOnCollision.Emit(Mathf.RoundToInt(force * 0.3f));
+        _psOnCollisionMain.startSpeedMultiplier = force;
+        _psOnCollision.Emit(Mathf.RoundToInt(force * 0.3f));
     }
 
     private void ManageParticlesOnMove()
     {
-        if (player.velocity.magnitude > lastVelocityMagnitude + 3 || player.velocity.magnitude < lastVelocityMagnitude - 3)
+        if (_player.velocity.magnitude > _lastVelocityMagnitude + 3 || _player.velocity.magnitude < _lastVelocityMagnitude - 3)
         {
-            ParticleSystem.EmissionModule emission = psOnMovement.emission;
-            emission.rateOverTime = player.velocity.magnitude * 0.002f;
-            lastVelocityMagnitude = player.velocity.magnitude;
+            ParticleSystem.EmissionModule emission = _psOnMovement.emission;
+            emission.rateOverTime = _player.velocity.magnitude * 0.002f;
+            _lastVelocityMagnitude = _player.velocity.magnitude;
             //Debug.Log("Emission rate: " + emission.rateOverTime.constant + ", new speed: " + lastSpeed);
         }
     }
@@ -507,20 +510,20 @@ public class Player : MonoBehaviour
     void UpdatePositionIndicator()
     {
         Vector2 newPosition = Vector2Int.RoundToInt(new Vector2(transform.position.x + 3.25f, transform.position.y + 3.86f) / 4);
-        if (newPosition != position)
+        if (newPosition != _lastPosition)
         {
-            position = newPosition;
-            distanceIndicator.text = "Distance: " + newPosition.x + "m";
-            altitudeIndicator.text = "Altitude: " + newPosition.y + "m";
+            _lastPosition = newPosition;
+            _distanceIndicator.text = "Distance: " + newPosition.x + "m";
+            _altituteIndicator.text = "Altitude: " + newPosition.y + "m";
         }
     }
 
     void GameOver()
     {
-        // player.velocity = Vector2.zero;
-        // player.MoveRotation(0f);
-        player.bodyType = RigidbodyType2D.Static;
-        psOnMovement.Stop();
+        // _player.velocity = Vector2.zero;
+        // _player.MoveRotation(0f);
+        _player.bodyType = RigidbodyType2D.Static;
+        _psOnMovement.Stop();
         Debug.Log("Game Over!");
         // EditorApplication.isPlaying = false;
     }
