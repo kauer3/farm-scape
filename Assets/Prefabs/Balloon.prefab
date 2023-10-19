@@ -401,8 +401,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _health: 50
-  _playerForce: 25
-  _force: 35
+  _playerForce: 35
+  _force: 40
   _particlesOnCollision: 0
   _particlesSpeedMultiplier: 1
   _particlesQuantity: 20
