@@ -4,48 +4,49 @@ using UnityEngine;
 
 public class DestructableObject : MonoBehaviour
 {
-    [SerializeField] float health;
-    [SerializeField] float playerForce;
-    [SerializeField] float force;
-    [SerializeField] bool particlesOnCollision;
-    [SerializeField] float particlesSpeedMultiplier;
-    [SerializeField] int particlesQuantity;
-    [SerializeField] ParticleSystem particles;
-    [SerializeField] SpriteRenderer spriteRenderer;
-    [SerializeField] Collider2D collider2d;
+    [SerializeField] float _health;
+    [SerializeField] float _playerForce;
+    [SerializeField] float _force;
+    [SerializeField] bool _particlesOnCollision;
+    [SerializeField] float _particlesSpeedMultiplier;
+    [SerializeField] int _particlesQuantity;
+    [SerializeField] ParticleSystem _particles;
+    [SerializeField] SpriteRenderer _spriteRenderer;
+    [SerializeField] Collider2D _collider2d;
 
-    private void OnCollisionEnter2D(Collision2D collision)
+    private void OnCollisionEnter2D(Collision2D _collision)
     {
-        if (collision.gameObject.CompareTag("Player") && collision.relativeVelocity.magnitude > playerForce || collision.relativeVelocity.magnitude > force)
+        Debug.Log(_collision.relativeVelocity.magnitude);
+        if (_collision.gameObject.CompareTag("Player") && _collision.relativeVelocity.magnitude > _playerForce || _collision.relativeVelocity.magnitude > _force)
         {
-            EmitParticles(collision.relativeVelocity.magnitude);
+            EmitParticles(_collision.relativeVelocity.magnitude);
         }
-        else if (health > 0)
+        else if (_health > 0)
         {
-            CheckHealth(collision.relativeVelocity.magnitude);
+            CheckHealth(_collision.relativeVelocity.magnitude);
         }
     }
 
-    private void CheckHealth(float damage)
+    private void CheckHealth(float _damage)
     {
-        health -= damage;
-        if (health <= 0)
+        _health -= _damage;
+        if (_health <= 0)
         {
-            EmitParticles(damage);
+            EmitParticles(_damage);
         }
-        else if (particlesOnCollision)
+        else if (_particlesOnCollision)
         {
-            particles.Emit(Mathf.RoundToInt(damage/1.5f));
+            _particles.Emit(Mathf.RoundToInt(_damage/1.5f));
         }
     }
 
-    public void EmitParticles(float force)
+    public void EmitParticles(float _particlesForce)
     {
-        Destroy(spriteRenderer);
-        collider2d.enabled = false;
-        ParticleSystem.MainModule main = particles.main;
-        main.startSpeedMultiplier = force * particlesSpeedMultiplier;
-        main.stopAction = ParticleSystemStopAction.Destroy;
-        particles.Emit(particlesQuantity);
+        Destroy(_spriteRenderer);
+        _collider2d.enabled = false;
+        ParticleSystem.MainModule _main = _particles.main;
+        _main.startSpeedMultiplier = _particlesForce * _particlesSpeedMultiplier;
+        _main.stopAction = ParticleSystemStopAction.Destroy;
+        _particles.Emit(_particlesQuantity);
     }
 }

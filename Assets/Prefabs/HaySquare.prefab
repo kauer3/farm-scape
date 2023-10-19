@@ -5066,15 +5066,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b9cbed03c9e2bd48a47d5b834e2b905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 85
-  playerForce: 32
-  force: 50
-  particlesOnCollision: 1
-  particlesSpeedMultiplier: 1
-  particlesQuantity: 150
-  particles: {fileID: 7595184555184890575}
-  spriteRenderer: {fileID: 3973900699126028840}
-  collider2d: {fileID: 5825305958321862718}
+  _health: 90
+  _playerForce: 35
+  _force: 28
+  _particlesOnCollision: 1
+  _particlesSpeedMultiplier: 1
+  _particlesQuantity: 150
+  _particles: {fileID: 7595184555184890575}
+  _spriteRenderer: {fileID: 3973900699126028840}
+  _collider2d: {fileID: 5825305958321862718}
 --- !u!114 &5930421113417054590
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5112,8 +5112,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0866999ffaabe394ba3a8528ba431a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hay: {fileID: 5156800252390827073}
-  hayParticles: {fileID: 8726065521929124439}
+  _hay: {fileID: 5156800252390827073}
+  _hayParticles: {fileID: 8726065521929124439}
 --- !u!199 &5159166150544145749
 ParticleSystemRenderer:
   serializedVersion: 6

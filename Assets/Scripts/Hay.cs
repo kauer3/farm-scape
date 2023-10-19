@@ -4,25 +4,18 @@ using UnityEngine;
 
 public class Hay : MonoBehaviour
 {
-    [SerializeField] Rigidbody2D hay;
-    [SerializeField] ParticleSystem hayParticles;
-
-    // private void Start()
-    // {
-        // hayParticles.Play();
-    // }
+    [SerializeField] Rigidbody2D _hay;
+    [SerializeField] ParticleSystem _hayParticles;
 
     private void FixedUpdate()
     {
-        if (hay.velocity.magnitude > 5 && hayParticles.isStopped)
+        if (_hay.velocity.magnitude > 5 && _hayParticles.isStopped)
         {
-            hayParticles.Play();
-            //Debug.Log("Particles playing");
+            _hayParticles.Play();
         }
-        else if (hay.velocity.magnitude < 1.5 && hayParticles.isPlaying)
+        else if (_hay.velocity.magnitude < 1.5 && _hayParticles.isPlaying)
         {
-            hayParticles.Stop();
-            //Debug.Log("Particles stopped");
+            _hayParticles.Stop();
         }
     }
 }

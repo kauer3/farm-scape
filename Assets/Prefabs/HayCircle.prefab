@@ -167,15 +167,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b9cbed03c9e2bd48a47d5b834e2b905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 100
-  playerForce: 32
-  force: 50
-  particlesOnCollision: 1
-  particlesSpeedMultiplier: 1
-  particlesQuantity: 150
-  particles: {fileID: 2256891678619403172}
-  spriteRenderer: {fileID: 3973900699126028840}
-  collider2d: {fileID: 199640408829496820}
+  _health: 100
+  _playerForce: 28
+  _force: 35
+  _particlesOnCollision: 1
+  _particlesSpeedMultiplier: 1
+  _particlesQuantity: 150
+  _particles: {fileID: 2256891678619403172}
+  _spriteRenderer: {fileID: 3973900699126028840}
+  _collider2d: {fileID: 199640408829496820}
 --- !u!114 &7547558953159084111
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -5069,8 +5069,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0866999ffaabe394ba3a8528ba431a0a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  hay: {fileID: 5156800252390827073}
-  hayParticles: {fileID: 2979702463170883129}
+  _hay: {fileID: 5156800252390827073}
+  _hayParticles: {fileID: 2979702463170883129}
 --- !u!1 &4944412223977326229
 GameObject:
   m_ObjectHideFlags: 0

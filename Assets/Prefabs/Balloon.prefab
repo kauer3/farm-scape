@@ -231,7 +231,7 @@ Transform:
   - {fileID: 60003300}
   - {fileID: 1535172920}
   m_Father: {fileID: 0}
-  m_RootOrder: 0
+  m_RootOrder: 8
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &4018243643944250795
 SpriteRenderer:
@@ -400,15 +400,15 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b9cbed03c9e2bd48a47d5b834e2b905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 75
-  playerForce: 28
-  force: 40
-  particlesOnCollision: 0
-  particlesSpeedMultiplier: 1
-  particlesQuantity: 10
-  particles: {fileID: 641069484716071361}
-  spriteRenderer: {fileID: 4018243643944250795}
-  collider2d: {fileID: 2753397961162203894}
+  _health: 50
+  _playerForce: 25
+  _force: 35
+  _particlesOnCollision: 0
+  _particlesSpeedMultiplier: 1
+  _particlesQuantity: 20
+  _particles: {fileID: 641069484716071361}
+  _spriteRenderer: {fileID: 4018243643944250795}
+  _collider2d: {fileID: 2753397961162203894}
 --- !u!255 &1291893358
 FixedJoint2D:
   m_ObjectHideFlags: 0
@@ -425,7 +425,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: -1.7200001}
+  m_ConnectedAnchor: {x: 0.0000006291599, y: -1.7199998}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!255 &1291893357
@@ -444,7 +444,7 @@ FixedJoint2D:
   m_BreakAction: 3
   m_AutoConfigureConnectedAnchor: 1
   m_Anchor: {x: 0, y: 0}
-  m_ConnectedAnchor: {x: 0, y: 1.8340002}
+  m_ConnectedAnchor: {x: 0, y: 1.834}
   m_DampingRatio: 0
   m_Frequency: 0
 --- !u!114 &1380302452837079808
