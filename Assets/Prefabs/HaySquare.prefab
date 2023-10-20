@@ -5066,9 +5066,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3b9cbed03c9e2bd48a47d5b834e2b905, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _health: 90
-  _playerForce: 35
-  _force: 28
+  _health: 85
+  _playerForce: 32
+  _force: 50
   _particlesOnCollision: 1
   _particlesSpeedMultiplier: 1
   _particlesQuantity: 150
