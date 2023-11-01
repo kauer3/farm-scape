@@ -1,8 +1,11 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Linq;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
+using Random = System.Random;
 
 public class BackgroundParallax : MonoBehaviour
 {
@@ -27,6 +30,14 @@ public class BackgroundParallax : MonoBehaviour
 
         transform.position = new Vector3(startPosX + distX, startPosY + distY, transform.position.z);
 
-        if (temp > startPosX + length) startPosX += length;
+        if (temp > startPosX + length) {
+            startPosX += length;
+            if (backgroundSprites.Any())
+            {
+                Random randSprites = new Random();
+                GetComponent<SpriteRenderer>().sprite = backgroundSprites[randSprites.Next(0, backgroundSprites.Count)];
+                length = GetComponent<SpriteRenderer>().bounds.size.x;
+            }
+        }   
     }
 }
