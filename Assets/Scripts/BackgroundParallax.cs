@@ -12,32 +12,34 @@ public class BackgroundParallax : MonoBehaviour
     public List<Sprite> backgroundSprites;
     public float parralaxX, parralaxY;
     public GameObject cam;
-    float startPosX, startPosY, length;
+    float startPosX, length;
+    Vector3 lastCam;
     // Start is called before the first frame update
     void Start()
     {
-        startPosX = cam.transform.position.x;
-        startPosY = cam.transform.position.y;
+        lastCam = cam.transform.position;
         length = GetComponent<SpriteRenderer>().bounds.size.x;
+        startPosX = transform.position.x;
     }
 
     // Update is called once per frame
     private void Update()
     {
-        float temp = (cam.transform.position.x * (1 - parralaxX));
-        float distX = (cam.transform.position.x * parralaxX);
-        float distY = (cam.transform.position.y * parralaxY);
+        Vector3 camMovement = cam.transform.position - lastCam;
 
-        transform.position = new Vector3(startPosX + distX, startPosY + distY, transform.position.z);
+        transform.position = new Vector3(transform.position.x + (camMovement.x * parralaxX), transform.position.y + (camMovement.y * parralaxY));
 
-        if (temp > startPosX + length) {
-            startPosX += length;
+        lastCam = cam.transform.position;
+        
+        if(cam.transform.position.x > transform.position.x + length)
+        {
+            transform.position = new Vector3(transform.position.x + length, transform.position.y);
             if (backgroundSprites.Any())
             {
-                Random randSprites = new Random();
-                GetComponent<SpriteRenderer>().sprite = backgroundSprites[randSprites.Next(0, backgroundSprites.Count)];
+                Random rand = new Random();
+                GetComponent<SpriteRenderer>().sprite = backgroundSprites[rand.Next(0, backgroundSprites.Count)];
                 length = GetComponent<SpriteRenderer>().bounds.size.x;
             }
-        }   
+        }
     }
 }
