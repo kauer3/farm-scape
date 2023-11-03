@@ -11,35 +11,42 @@ public class BackgroundParallax : MonoBehaviour
 {
     public List<Sprite> backgroundSprites;
     public float parralaxX, parralaxY;
+    public float smooth = 0.3f;
     public GameObject cam;
-    float startPosX, length;
+    float length;
     Vector3 lastCam;
     // Start is called before the first frame update
     void Start()
     {
         lastCam = cam.transform.position;
         length = GetComponent<SpriteRenderer>().bounds.size.x;
-        startPosX = transform.position.x;
     }
 
     // Update is called once per frame
     private void Update()
-    {
+    { 
         Vector3 camMovement = cam.transform.position - lastCam;
+        Vector3 newPos = new Vector3(transform.position.x + (camMovement.x * parralaxX), transform.position.y + (camMovement.y * parralaxY));
 
-        transform.position = new Vector3(transform.position.x + (camMovement.x * parralaxX), transform.position.y + (camMovement.y * parralaxY));
+        transform.position = newPos;
 
         lastCam = cam.transform.position;
         
-        if(cam.transform.position.x > transform.position.x + length)
+        if(cam.transform.position.x > transform.position.x + (length*2))
         {
-            transform.position = new Vector3(transform.position.x + length, transform.position.y);
             if (backgroundSprites.Any())
             {
                 Random rand = new Random();
                 GetComponent<SpriteRenderer>().sprite = backgroundSprites[rand.Next(0, backgroundSprites.Count)];
                 length = GetComponent<SpriteRenderer>().bounds.size.x;
             }
+            transform.position = new Vector3(transform.position.x + (length*3), transform.position.y);
         }
+    }
+
+    
+    private void FixedUpdate()
+    {
+        
     }
 }
