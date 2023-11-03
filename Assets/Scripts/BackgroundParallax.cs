@@ -11,7 +11,6 @@ public class BackgroundParallax : MonoBehaviour
 {
     public List<Sprite> backgroundSprites;
     public float parralaxX, parralaxY;
-    public float smooth = 0.3f;
     public GameObject cam;
     float length;
     Vector3 lastCam;
@@ -23,7 +22,7 @@ public class BackgroundParallax : MonoBehaviour
     }
 
     // Update is called once per frame
-    private void Update()
+    private void LateUpdate()
     { 
         Vector3 camMovement = cam.transform.position - lastCam;
         Vector3 newPos = new Vector3(transform.position.x + (camMovement.x * parralaxX), transform.position.y + (camMovement.y * parralaxY));
@@ -42,11 +41,5 @@ public class BackgroundParallax : MonoBehaviour
             }
             transform.position = new Vector3(transform.position.x + (length*3), transform.position.y);
         }
-    }
-
-    
-    private void FixedUpdate()
-    {
-        
     }
 }
