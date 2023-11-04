@@ -250,16 +250,16 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 161829281}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 14.716154, y: 3.341764, z: -1.648619}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 6.0561543, y: -1.0687089, z: 21.747778}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1947259817}
   - {fileID: 1512109075}
   - {fileID: 343070655}
-  m_Father: {fileID: 0}
-  m_RootOrder: 22
+  m_Father: {fileID: 2140912879}
+  m_RootOrder: -1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &202890023
 GameObject:
@@ -594,7 +594,7 @@ MonoBehaviour:
   backgroundSprites:
   - {fileID: 21300000, guid: 54261129c72c0d44591e4f53374c9c33, type: 3}
   parralaxX: 0.94
-  parralaxY: 0.96
+  parralaxY: 0.9
   cam: {fileID: 519420028}
 --- !u!212 &343070657
 SpriteRenderer:
@@ -1877,7 +1877,7 @@ MonoBehaviour:
   backgroundSprites:
   - {fileID: 21300000, guid: 54261129c72c0d44591e4f53374c9c33, type: 3}
   parralaxX: 0.94
-  parralaxY: 0.96
+  parralaxY: 0.9
   cam: {fileID: 519420028}
 --- !u!212 &1512109077
 SpriteRenderer:
@@ -13070,7 +13070,7 @@ MonoBehaviour:
   backgroundSprites:
   - {fileID: 21300000, guid: 54261129c72c0d44591e4f53374c9c33, type: 3}
   parralaxX: 0.94
-  parralaxY: 0.96
+  parralaxY: 0.9
   cam: {fileID: 519420028}
 --- !u!1001 &2030477645
 PrefabInstance:
@@ -13252,6 +13252,7 @@ Transform:
   m_Children:
   - {fileID: 1164447373}
   - {fileID: 465830126}
+  - {fileID: 161829282}
   m_Father: {fileID: 0}
   m_RootOrder: 21
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
