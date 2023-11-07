@@ -19,6 +19,7 @@ public class Player : MonoBehaviour
 
     private float _flapTimeLength = 0.05f;
     private bool _flapping = false;
+    private AudioSource cluckSound;
 
     private float _skateBoostLength = 1;
 
@@ -212,6 +213,7 @@ public class Player : MonoBehaviour
 
     private void ManageFlightInput()
     {
+
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (!_launched)
@@ -222,6 +224,9 @@ public class Player : MonoBehaviour
             {
                 StopCoroutine(ExecuteFlap());
                 StartCoroutine(ExecuteFlap());
+
+                cluckSound = GetComponent<AudioSource>();
+                cluckSound.Play();
             }
         }
     }
