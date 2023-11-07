@@ -20,6 +20,8 @@ public class Player : MonoBehaviour
     private float _flapTimeLength = 0.05f;
     private bool _flapping = false;
     private AudioSource cluckSound;
+    private AudioSource canonSound;
+    private AudioSource boostSound;
 
     private float _skateBoostLength = 1;
 
@@ -213,19 +215,22 @@ public class Player : MonoBehaviour
 
     private void ManageFlightInput()
     {
+        cluckSound = GetComponent<AudioSource>();
+        canonSound = GameObject.Find("Canon").GetComponent<AudioSource>();
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
             if (!_launched)
             {
                 Launch(Vector2.right * _speed);
+
+                canonSound.Play();
             }
             else
             {
                 StopCoroutine(ExecuteFlap());
                 StartCoroutine(ExecuteFlap());
 
-                cluckSound = GetComponent<AudioSource>();
                 cluckSound.Play();
             }
         }
@@ -438,7 +443,6 @@ public class Player : MonoBehaviour
             {
                 StartCoroutine(ExecuteEggPropulsion());
             }
-
             Destroy(obj);
         }
     }

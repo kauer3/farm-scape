@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+
 public class DestructableObject : MonoBehaviour
 {
     [SerializeField] float _health;
@@ -14,12 +15,16 @@ public class DestructableObject : MonoBehaviour
     [SerializeField] SpriteRenderer _spriteRenderer;
     [SerializeField] Collider2D _collider2d;
 
+    private AudioSource destroySound;
+
     private void OnCollisionEnter2D(Collision2D _collision)
     {
         Debug.Log(_collision.relativeVelocity.magnitude);
         if (_collision.gameObject.CompareTag("Player") && _collision.relativeVelocity.magnitude > _playerForce || _collision.relativeVelocity.magnitude > _force)
         {
             EmitParticles(_collision.relativeVelocity.magnitude);
+            destroySound = GetComponent<AudioSource>();
+            destroySound.Play();
         }
         else if (_health > 0)
         {
