@@ -8,6 +8,15 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Trailer/Scenes/Trailer_scene1.unity
+    guid: 532879a271fc16e4e9c7cc64690041bf
+  - enabled: 1
+    path: Assets/Trailer/Scenes/Trailer_scene2.unity
+    guid: a77d828959496ac4e8c346e935214264
+  - enabled: 1
+    path: Assets/Trailer/Scenes/Trailer_scene3.unity
+    guid: 47b15dbcf9b86864b81fa6fe7b19b41e
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 10f6848341d2a224eb66ad98ba08584d, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: f90595c9ea9a1f349a2931d171a4c257, type: 2}
