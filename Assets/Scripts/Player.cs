@@ -216,6 +216,7 @@ public class Player : MonoBehaviour
     private void ManageFlightInput()
     {
         cluckSound = GetComponent<AudioSource>();
+        AudioClip cluck = cluckSound.clip;
         canonSound = GameObject.Find("Canon").GetComponent<AudioSource>();
 
         if (Input.GetKeyDown(KeyCode.Space))
@@ -231,7 +232,7 @@ public class Player : MonoBehaviour
                 StopCoroutine(ExecuteFlap());
                 StartCoroutine(ExecuteFlap());
 
-                cluckSound.Play();
+                cluckSound.PlayOneShot(cluck);
             }
         }
     }

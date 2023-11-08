@@ -327,6 +327,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: RampAndBoost
       objectReference: {fileID: 0}
+    - target: {fileID: 4896910104984957307, guid: 275762e213a68634ca17846d219b464f, type: 3}
+      propertyPath: m_LocalPosition.y
+      value: 0.53
+      objectReference: {fileID: 0}
     - target: {fileID: 5564937257434755214, guid: 275762e213a68634ca17846d219b464f, type: 3}
       propertyPath: m_RootOrder
       value: -1
