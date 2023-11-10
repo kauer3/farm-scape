@@ -7553,8 +7553,8 @@ MonoBehaviour:
   _psOnMovement: {fileID: 1595619194}
   _defaultPhysics: {fileID: 6200000, guid: 8c0e8933b6adc1949ba5bc6917452c73, type: 2}
   _onSkatePhysics: {fileID: 6200000, guid: 3b07f0985b7a4b04f8042599c4e24b51, type: 2}
-  _speed: 1000
-  _drag: 0.001
+  _speed: 250
+  _drag: 0.175
 --- !u!198 &1795070817
 ParticleSystem:
   m_ObjectHideFlags: 0
