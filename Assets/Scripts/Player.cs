@@ -1,6 +1,6 @@
 using System.Collections;
 using TMPro;
-using UnityEditor;
+//using UnityEditor;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.UI;
@@ -347,7 +347,6 @@ public class Player : MonoBehaviour
         _player.bodyType = RigidbodyType2D.Static;
         _psOnMovement.Stop();
         Debug.Log("Game Over!");
-        EditorApplication.isPlaying = false;
     }
 
     void OnCollisionEnter2D(Collision2D collision)

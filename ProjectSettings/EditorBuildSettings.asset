@@ -8,6 +8,9 @@ EditorBuildSettings:
   - enabled: 0
     path: 
     guid: 00000000000000000000000000000000
+  - enabled: 1
+    path: Assets/Scenes/background_test.unity
+    guid: 38cc1128a001e524cb1e119d5930fcea
   m_configObjects:
     com.unity.adaptiveperformance.loader_settings: {fileID: 11400000, guid: 10f6848341d2a224eb66ad98ba08584d, type: 2}
     com.unity.adaptiveperformance.simulator.provider_settings: {fileID: 11400000, guid: f90595c9ea9a1f349a2931d171a4c257, type: 2}
