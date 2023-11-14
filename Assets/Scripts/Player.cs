@@ -43,6 +43,7 @@ public class Player : MonoBehaviour
     private Rigidbody2D _instantiatedSkateboard = null;
     public GameObject _skateboard;
     public GameObject _egg;
+    public GameObject _startElement;
 
     public ParticleSystem _psOnCollision;
     public ParticleSystem _psOnMovement;
@@ -243,6 +244,7 @@ public class Player : MonoBehaviour
         _player.AddRelativeForce(direction, ForceMode2D.Impulse);
         //EmitParticles(100);
         _psOnMovement.Play();
+        _startElement.SetActive(false);
         _launched = true;
     }
 
