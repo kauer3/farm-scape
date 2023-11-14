@@ -1,6 +1,5 @@
 using System.Collections;
 using TMPro;
-//using UnityEditor;
 using UnityEngine;
 using Cinemachine;
 using UnityEngine.UI;
@@ -16,6 +15,7 @@ public class Player : MonoBehaviour
     public Image _skateIndicator;
     public Image _springIndicator;
     private Vector2 _lastPosition;
+    private float _distance;
 
     private float _flapTimeLength = 0.05f;
     private bool _flapping = false;
@@ -339,6 +339,7 @@ public class Player : MonoBehaviour
             _lastPosition = newPosition;
             _distanceIndicator.text = "Distance: " + newPosition.x + "m";
             _altituteIndicator.text = "Altitude: " + newPosition.y + "m";
+            _distance = newPosition.x;
         }
     }
 
@@ -347,6 +348,8 @@ public class Player : MonoBehaviour
         _player.bodyType = RigidbodyType2D.Static;
         _psOnMovement.Stop();
         Debug.Log("Game Over!");
+        GameObject.FindObjectOfType<UIManager>().score = (int)_distance;
+        GameObject.FindObjectOfType<UIManager>().GameOverScreen();
     }
 
     void OnCollisionEnter2D(Collision2D collision)
