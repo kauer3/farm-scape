@@ -20,7 +20,7 @@ public class Player : MonoBehaviour
     private float _flapTimeLength = 0.05f;
     private bool _flapping = false;
     private AudioSource cluckSound;
-    private AudioSource canonSound;
+    private AudioSource cannonSound;
     private AudioSource boostSound;
 
     private float _skateBoostLength = 1;
@@ -218,7 +218,7 @@ public class Player : MonoBehaviour
     {
         cluckSound = GetComponent<AudioSource>();
         AudioClip cluck = cluckSound.clip;
-        canonSound = GameObject.Find("Canon").GetComponent<AudioSource>();
+        cannonSound = GameObject.Find("Canon").GetComponent<AudioSource>();
 
         if (Input.GetKeyDown(KeyCode.Space))
         {
@@ -226,7 +226,7 @@ public class Player : MonoBehaviour
             {
                 Launch(Vector2.right * _speed);
 
-                canonSound.Play();
+                cannonSound.Play();
             }
             else
             {
