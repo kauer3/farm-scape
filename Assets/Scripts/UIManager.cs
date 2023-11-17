@@ -17,6 +17,11 @@ public class UIManager : MonoBehaviour
     public TMP_Text high_score;
     public int score;
     public TMP_Text playerText;
+
+    public AudioSource overSound;
+    public AudioSource highscoreSound;
+    public AudioSource uiSound;
+
     string sceneName;
     string savePath;
     XmlDocument xmlDocument;
@@ -57,11 +62,14 @@ public class UIManager : MonoBehaviour
     {
         gameElements.SetActive(false);
         gameOver.SetActive(true);
+        overSound.Play();
         
         if (Highscore.highscore < score)
         {
             high_score.text = "New High Score: " + score + "m";
             Highscore.highscore = score;
+            
+            highscoreSound.Play();
             return;
         }
         high_score.text = "Score: " + score + "m";
@@ -84,6 +92,7 @@ public class UIManager : MonoBehaviour
     {
         if(playerText.text.Length > 0) 
         {
+        uiSound.Play();
             string playerName = playerText.text;
             try
             {
