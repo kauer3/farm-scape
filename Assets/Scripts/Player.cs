@@ -19,9 +19,13 @@ public class Player : MonoBehaviour
 
     private float _flapTimeLength = 0.05f;
     private bool _flapping = false;
-    private AudioSource cluckSound;
-    private AudioSource cannonSound;
-    private AudioSource boostSound;
+    public AudioSource cluckSound;
+    public AudioSource cannonSound;
+    public AudioSource boostSound;
+    public AudioSource fireworkSound;
+    public AudioSource eggSound;
+    public AudioSource eggPopSound;
+    public AudioSource haySound;
 
     private float _skateBoostLength = 1;
 
@@ -209,6 +213,7 @@ public class Player : MonoBehaviour
         {
             _player.AddForce(Vector2.right * 35, ForceMode2D.Impulse);
             ExpelEgg();
+            eggPopSound.Play();
             yield return new WaitForSeconds(_eggExpelDelay);
         }
         _executingEggPropulsion = false;
@@ -427,12 +432,14 @@ public class Player : MonoBehaviour
             if (obj.CompareTag("Boost"))
             {
                 StartCoroutine(ExecuteRocketPropulsion());
+                fireworkSound.Play();
                 Destroy(obj.transform.parent.gameObject);
                 return;
             }
             else if (obj.CompareTag("Speed Boost"))
             {
                 StartCoroutine(ExecuteSpeedBoost());
+                boostSound.Play();
             }
             else if (obj.CompareTag("Skate"))
             {
@@ -447,6 +454,7 @@ public class Player : MonoBehaviour
             else if (obj.CompareTag("Egg Pickup"))
             {
                 StartCoroutine(ExecuteEggPropulsion());
+                eggSound.Play();
             }
             Destroy(obj);
         }
