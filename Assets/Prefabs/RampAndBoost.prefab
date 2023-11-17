@@ -57,7 +57,7 @@ GameObject:
   m_Component:
   - component: {fileID: 4896910104984957307}
   - component: {fileID: 6997231395985227815}
-  - component: {fileID: 5907427453266017109}
+  - component: {fileID: 3204080238386620103}
   m_Layer: 0
   m_Name: Ramp
   m_TagString: Untagged
@@ -132,7 +132,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!60 &5907427453266017109
+--- !u!60 &3204080238386620103
 PolygonCollider2D:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -176,18 +176,15 @@ PolygonCollider2D:
   m_AutoTiling: 0
   m_Points:
     m_Paths:
-    - - {x: 0.45878, y: -0.01411888}
-      - {x: 0.32498252, y: -0.014821403}
-      - {x: 0.1832974, y: -0.01623559}
-      - {x: 0.04570675, y: -0.056015253}
-      - {x: -0.07135737, y: -0.091425896}
-      - {x: -0.18411171, y: -0.1159668}
-      - {x: -0.20771289, y: -0.11954856}
-      - {x: -0.30581486, y: -0.13448429}
-      - {x: -0.48944098, y: -0.1571455}
-      - {x: -0.32999998, y: -0.155}
-      - {x: 0.51, y: -0.155}
-      - {x: 0.5116596, y: -0.0143122375}
+    - - {x: 0.90999997, y: 0.42}
+      - {x: 0.71999997, y: 0.31}
+      - {x: 0.62, y: 0.24}
+      - {x: 0.32999998, y: 0.08}
+      - {x: 0.04, y: -0.06}
+      - {x: -0.32, y: -0.19}
+      - {x: -1.32, y: -0.42}
+      - {x: 1.01, y: -0.42}
+      - {x: 1.01, y: 0.42}
   m_UseDelaunayMesh: 0
 --- !u!1001 &2944370819001316903
 PrefabInstance:

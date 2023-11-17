@@ -48,6 +48,7 @@ public class Player : MonoBehaviour
     public GameObject _skateboard;
     public GameObject _egg;
     public GameObject _startElement;
+    public SpriteRenderer _playerSprite;
 
     public ParticleSystem _psOnCollision;
     public ParticleSystem _psOnMovement;
@@ -72,17 +73,7 @@ public class Player : MonoBehaviour
     {
         ManageFlightInput();
         UpdatePositionIndicator();
-        //ManageCameraShake();
-        
-        // Zoom out camera when _player is moving fast
-        //if (_player.velocity.magnitude > 20)
-        //{
-            //composer.m_CameraDistance = Mathf.Clamp(_player.velocity.magnitude / 10, 10, 20);
-        //}
-        //else if (composer.m_CameraDistance != 27)
-        //{
-            //composer.m_CameraDistance = 27;
-        //}
+        ManageCameraShake();
     }
 
     void FixedUpdate()
@@ -90,6 +81,7 @@ public class Player : MonoBehaviour
         RotateTorwardsMovement();
         ManageParticlesOnMove();
         StoreVelocity();
+        PreventBackwardsMovement();
     }
 
     private IEnumerator ExecuteFlap()
@@ -99,7 +91,6 @@ public class Player : MonoBehaviour
         float _lerpedValue;
         float _flapStrength = _player.velocity.y < 0 ? _player.velocity.magnitude * 28 + _player.velocity.x * 8 : _player.velocity.x * 40;
         _flapStrength = Mathf.Min(_flapStrength, 1000);
-        //float dragOnFlap = 2.5f + Mathf.InverseLerp(300, 0, _flapStrength) * 2.5f;
 
         _player.drag = 3;
         while (_timeElapsed < _flapTimeLength)
@@ -247,9 +238,9 @@ public class Player : MonoBehaviour
     {
         _player.bodyType = RigidbodyType2D.Dynamic;
         _player.AddRelativeForce(direction, ForceMode2D.Impulse);
-        //EmitParticles(100);
         _psOnMovement.Play();
         _startElement.SetActive(false);
+        _playerSprite.enabled = true;
         _launched = true;
     }
 
@@ -330,6 +321,14 @@ public class Player : MonoBehaviour
         }
     }
 
+    private void PreventBackwardsMovement()
+    {
+        if (_player.velocity.x < 0)
+        {
+            _player.velocity = new Vector2(0, _player.velocity.y);
+        }
+    }
+
     private void StoreVelocity()
     {
         if ((_bouncyPickup || _skatePickup) && _player.position.y < -3.5)
@@ -354,7 +353,6 @@ public class Player : MonoBehaviour
     {
         _player.bodyType = RigidbodyType2D.Static;
         _psOnMovement.Stop();
-        Debug.Log("Game Over!");
         GameObject.FindObjectOfType<UIManager>().score = (int)_distance;
         GameObject.FindObjectOfType<UIManager>().GameOverScreen();
     }

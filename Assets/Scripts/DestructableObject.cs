@@ -19,7 +19,6 @@ public class DestructableObject : MonoBehaviour
 
     private void OnCollisionEnter2D(Collision2D _collision)
     {
-        Debug.Log(_collision.relativeVelocity.magnitude);
         if (_collision.gameObject.CompareTag("Player") && _collision.relativeVelocity.magnitude > _playerForce || _collision.relativeVelocity.magnitude > _force)
         {
             EmitParticles(_collision.relativeVelocity.magnitude);
